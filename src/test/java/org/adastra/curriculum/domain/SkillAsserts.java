@@ -60,6 +60,7 @@ public class SkillAsserts {
     public static void assertSkillUpdatableRelationshipsEquals(Skill expected, Skill actual) {
         assertThat(actual)
             .as("Verify Skill relationships")
-            .satisfies(a -> assertThat(a.getBiography()).as("check biography").isEqualTo(expected.getBiography()));
+            .satisfies(a -> assertThat(a.getBiography()).as("check biography").isEqualTo(expected.getBiography()))
+            .satisfies(a -> assertThat(a.getProjects()).as("check projects").isEqualTo(expected.getProjects()));
     }
 }

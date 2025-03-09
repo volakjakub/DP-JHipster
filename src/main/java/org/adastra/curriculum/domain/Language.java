@@ -28,13 +28,11 @@ public class Language implements Serializable {
     private LanguageName name;
 
     @NotNull
-    @Min(value = 1)
-    @Max(value = 5)
     @Column(name = "expertise", nullable = false)
     private Integer expertise;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "user", "educations", "languages", "skills" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "user", "educations", "languages", "skills", "projects" }, allowSetters = true)
     private Biography biography;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

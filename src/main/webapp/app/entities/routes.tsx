@@ -7,6 +7,7 @@ import Biography from './biography';
 import Education from './education';
 import Language from './language';
 import Skill from './skill';
+import Project from './project';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 export default () => {
@@ -18,6 +19,7 @@ export default () => {
         <Route path="education/*" element={<Education />} />
         <Route path="language/*" element={<Language />} />
         <Route path="skill/*" element={<Skill />} />
+        <Route path="project/*" element={<Project />} />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}
       </ErrorBoundaryRoutes>
     </div>
