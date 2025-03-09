@@ -13,6 +13,7 @@ import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.adastra.curriculum.IntegrationTest;
@@ -76,8 +77,10 @@ class BiographyResourceIT {
     private static final LocalDate DEFAULT_EMPLOYED_FROM = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_EMPLOYED_FROM = LocalDate.now(ZoneId.systemDefault());
 
-    private static final String DEFAULT_IMAGE = "AAAAAAAAAA";
-    private static final String UPDATED_IMAGE = "BBBBBBBBBB";
+    private static final byte[] DEFAULT_IMAGE = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_IMAGE = TestUtil.createByteArray(1, "1");
+    private static final String DEFAULT_IMAGE_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_IMAGE_CONTENT_TYPE = "image/png";
 
     private static final String ENTITY_API_URL = "/api/biographies";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -131,7 +134,8 @@ class BiographyResourceIT {
             .country(DEFAULT_COUNTRY)
             .position(DEFAULT_POSITION)
             .employedFrom(DEFAULT_EMPLOYED_FROM)
-            .image(DEFAULT_IMAGE);
+            .image(DEFAULT_IMAGE)
+            .imageContentType(DEFAULT_IMAGE_CONTENT_TYPE);
     }
 
     /**
@@ -152,7 +156,8 @@ class BiographyResourceIT {
             .country(UPDATED_COUNTRY)
             .position(UPDATED_POSITION)
             .employedFrom(UPDATED_EMPLOYED_FROM)
-            .image(UPDATED_IMAGE);
+            .image(UPDATED_IMAGE)
+            .imageContentType(UPDATED_IMAGE_CONTENT_TYPE);
     }
 
     @BeforeEach
@@ -385,7 +390,8 @@ class BiographyResourceIT {
             .andExpect(jsonPath("$.[*].country").value(hasItem(DEFAULT_COUNTRY)))
             .andExpect(jsonPath("$.[*].position").value(hasItem(DEFAULT_POSITION)))
             .andExpect(jsonPath("$.[*].employedFrom").value(hasItem(DEFAULT_EMPLOYED_FROM.toString())))
-            .andExpect(jsonPath("$.[*].image").value(hasItem(DEFAULT_IMAGE)));
+            .andExpect(jsonPath("$.[*].imageContentType").value(hasItem(DEFAULT_IMAGE_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].image").value(hasItem(Base64.getEncoder().encodeToString(DEFAULT_IMAGE))));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -427,7 +433,8 @@ class BiographyResourceIT {
             .andExpect(jsonPath("$.country").value(DEFAULT_COUNTRY))
             .andExpect(jsonPath("$.position").value(DEFAULT_POSITION))
             .andExpect(jsonPath("$.employedFrom").value(DEFAULT_EMPLOYED_FROM.toString()))
-            .andExpect(jsonPath("$.image").value(DEFAULT_IMAGE));
+            .andExpect(jsonPath("$.imageContentType").value(DEFAULT_IMAGE_CONTENT_TYPE))
+            .andExpect(jsonPath("$.image").value(Base64.getEncoder().encodeToString(DEFAULT_IMAGE)));
     }
 
     @Test
@@ -460,7 +467,8 @@ class BiographyResourceIT {
             .country(UPDATED_COUNTRY)
             .position(UPDATED_POSITION)
             .employedFrom(UPDATED_EMPLOYED_FROM)
-            .image(UPDATED_IMAGE);
+            .image(UPDATED_IMAGE)
+            .imageContentType(UPDATED_IMAGE_CONTENT_TYPE);
         BiographyDTO biographyDTO = biographyMapper.toDto(updatedBiography);
 
         restBiographyMockMvc
@@ -598,7 +606,8 @@ class BiographyResourceIT {
             .country(UPDATED_COUNTRY)
             .position(UPDATED_POSITION)
             .employedFrom(UPDATED_EMPLOYED_FROM)
-            .image(UPDATED_IMAGE);
+            .image(UPDATED_IMAGE)
+            .imageContentType(UPDATED_IMAGE_CONTENT_TYPE);
 
         restBiographyMockMvc
             .perform(

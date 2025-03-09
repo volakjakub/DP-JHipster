@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button, Col, Row } from 'reactstrap';
-import { TextFormat } from 'react-jhipster';
+import { TextFormat, byteSize, openFile } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
@@ -75,7 +75,20 @@ export const BiographyDetail = () => {
           <dt>
             <span id="image">Image</span>
           </dt>
-          <dd>{biographyEntity.image}</dd>
+          <dd>
+            {biographyEntity.image ? (
+              <div>
+                {biographyEntity.imageContentType ? (
+                  <a onClick={openFile(biographyEntity.imageContentType, biographyEntity.image)}>
+                    <img src={`data:${biographyEntity.imageContentType};base64,${biographyEntity.image}`} style={{ maxHeight: '30px' }} />
+                  </a>
+                ) : null}
+                <span>
+                  {biographyEntity.imageContentType}, {byteSize(biographyEntity.image)}
+                </span>
+              </div>
+            ) : null}
+          </dd>
           <dt>User</dt>
           <dd>{biographyEntity.user ? biographyEntity.user.login : ''}</dd>
         </dl>

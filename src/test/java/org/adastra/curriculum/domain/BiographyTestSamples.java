@@ -20,8 +20,7 @@ public class BiographyTestSamples {
             .street("street1")
             .city("city1")
             .country("country1")
-            .position("position1")
-            .image("image1");
+            .position("position1");
     }
 
     public static Biography getBiographySample2() {
@@ -35,8 +34,7 @@ public class BiographyTestSamples {
             .street("street2")
             .city("city2")
             .country("country2")
-            .position("position2")
-            .image("image2");
+            .position("position2");
     }
 
     public static Biography getBiographyRandomSampleGenerator() {
@@ -50,7 +48,6 @@ public class BiographyTestSamples {
             .street(UUID.randomUUID().toString())
             .city(UUID.randomUUID().toString())
             .country(UUID.randomUUID().toString())
-            .position(UUID.randomUUID().toString())
-            .image(UUID.randomUUID().toString());
+            .position(UUID.randomUUID().toString());
     }
 }

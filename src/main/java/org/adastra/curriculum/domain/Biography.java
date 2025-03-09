@@ -72,9 +72,12 @@ public class Biography implements Serializable {
     @Column(name = "employed_from", nullable = false)
     private LocalDate employedFrom;
 
-    @Size(max = 50)
-    @Column(name = "image", length = 50)
-    private String image;
+    @Lob
+    @Column(name = "image")
+    private byte[] image;
+
+    @Column(name = "image_content_type")
+    private String imageContentType;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
@@ -241,17 +244,30 @@ public class Biography implements Serializable {
         this.employedFrom = employedFrom;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return this.image;
     }
 
-    public Biography image(String image) {
+    public Biography image(byte[] image) {
         this.setImage(image);
         return this;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public String getImageContentType() {
+        return this.imageContentType;
+    }
+
+    public Biography imageContentType(String imageContentType) {
+        this.imageContentType = imageContentType;
+        return this;
+    }
+
+    public void setImageContentType(String imageContentType) {
+        this.imageContentType = imageContentType;
     }
 
     public User getUser() {
@@ -426,6 +442,7 @@ public class Biography implements Serializable {
             ", position='" + getPosition() + "'" +
             ", employedFrom='" + getEmployedFrom() + "'" +
             ", image='" + getImage() + "'" +
+            ", imageContentType='" + getImageContentType() + "'" +
             "}";
     }
 }

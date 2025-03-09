@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
-import { JhiItemCount, JhiPagination, TextFormat, getPaginationState } from 'react-jhipster';
+import { JhiItemCount, JhiPagination, TextFormat, byteSize, getPaginationState, openFile } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
 import { APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
@@ -172,7 +172,21 @@ export const Biography = () => {
                       <TextFormat type="date" value={biography.employedFrom} format={APP_LOCAL_DATE_FORMAT} />
                     ) : null}
                   </td>
-                  <td>{biography.image}</td>
+                  <td>
+                    {biography.image ? (
+                      <div>
+                        {biography.imageContentType ? (
+                          <a onClick={openFile(biography.imageContentType, biography.image)}>
+                            <img src={`data:${biography.imageContentType};base64,${biography.image}`} style={{ maxHeight: '30px' }} />
+                            &nbsp;
+                          </a>
+                        ) : null}
+                        <span>
+                          {biography.imageContentType}, {byteSize(biography.image)}
+                        </span>
+                      </div>
+                    ) : null}
+                  </td>
                   <td>{biography.user ? biography.user.login : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
