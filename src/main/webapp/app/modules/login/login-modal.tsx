@@ -77,9 +77,6 @@ const LoginModal = (props: ILoginModalProps) => {
               Zapoměli jste heslo?
             </Link>
           </Alert>
-          <Alert color="warning">
-            <span>Ještě nemáte účet?</span> <Link to="/account/register">Zaregistrujte si nový účet.</Link>
-          </Alert>
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={handleClose} tabIndex={1}>

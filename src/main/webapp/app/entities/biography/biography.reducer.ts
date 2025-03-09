@@ -36,6 +36,15 @@ export const getEntity = createAsyncThunk(
   { serializeError: serializeAxiosError },
 );
 
+export const getEntityByUsername = createAsyncThunk(
+  'biography/fetch_entity_by_username',
+  async (id: string | number) => {
+    const requestUrl = `${apiUrl}/user?username=${id}`;
+    return axios.get<IBiography>(requestUrl);
+  },
+  { serializeError: serializeAxiosError },
+);
+
 export const createEntity = createAsyncThunk(
   'biography/create_entity',
   async (entity: IBiography, thunkAPI) => {
@@ -85,6 +94,10 @@ export const BiographySlice = createEntitySlice({
   extraReducers(builder) {
     builder
       .addCase(getEntity.fulfilled, (state, action) => {
+        state.loading = false;
+        state.entity = action.payload.data;
+      })
+      .addCase(getEntityByUsername.fulfilled, (state, action) => {
         state.loading = false;
         state.entity = action.payload.data;
       })

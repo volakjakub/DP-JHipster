@@ -159,6 +159,19 @@ public class BiographyResource {
     }
 
     /**
+     * {@code GET  /biographies} : get the biography by Username.
+     *
+     * @param username the username of the logged-in User.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the biography in body, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/user")
+    public ResponseEntity<BiographyDTO> getBiographyByUserId(@RequestParam(name = "username", required = true) String username) {
+        LOG.debug("REST request to get the biography by Username : {}", username);
+        Optional<BiographyDTO> biographyDTO = biographyService.findOneByUsername(username);
+        return ResponseUtil.wrapOrNotFound(biographyDTO);
+    }
+
+    /**
      * {@code GET  /biographies/:id} : get the "id" biography.
      *
      * @param id the id of the biographyDTO to retrieve.
