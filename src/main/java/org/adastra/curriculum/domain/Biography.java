@@ -1,9 +1,12 @@
 package org.adastra.curriculum.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Biography.
@@ -76,6 +79,10 @@ public class Biography implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private User user;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "biography")
+    @JsonIgnoreProperties(value = { "biography" }, allowSetters = true)
+    private Set<Education> educations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -245,6 +252,37 @@ public class Biography implements Serializable {
 
     public Biography user(User user) {
         this.setUser(user);
+        return this;
+    }
+
+    public Set<Education> getEducations() {
+        return this.educations;
+    }
+
+    public void setEducations(Set<Education> educations) {
+        if (this.educations != null) {
+            this.educations.forEach(i -> i.setBiography(null));
+        }
+        if (educations != null) {
+            educations.forEach(i -> i.setBiography(this));
+        }
+        this.educations = educations;
+    }
+
+    public Biography educations(Set<Education> educations) {
+        this.setEducations(educations);
+        return this;
+    }
+
+    public Biography addEducations(Education education) {
+        this.educations.add(education);
+        education.setBiography(this);
+        return this;
+    }
+
+    public Biography removeEducations(Education education) {
+        this.educations.remove(education);
+        education.setBiography(null);
         return this;
     }
 
