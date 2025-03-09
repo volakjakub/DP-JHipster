@@ -150,6 +150,21 @@ public class LanguageResource {
     }
 
     /**
+     * {@code GET  /languages} : get all the languages by Biography ID.
+     *
+     * @param biographyId the biography ID.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of languages in body.
+     */
+    @GetMapping("/biography")
+    public ResponseEntity<List<LanguageDTO>> getAllLanguagesByBiographyId(
+        @RequestParam(name = "biographyId", required = true) Long biographyId
+    ) {
+        LOG.debug("REST request to get a Languages by Biography ID : {}", biographyId);
+        List<LanguageDTO> languageDTOS = languageService.findAllByBiographyId(biographyId);
+        return ResponseEntity.ok().body(languageDTOS);
+    }
+
+    /**
      * {@code GET  /languages/:id} : get the "id" language.
      *
      * @param id the id of the languageDTO to retrieve.
