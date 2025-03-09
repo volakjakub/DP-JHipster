@@ -1,6 +1,8 @@
 package org.adastra.curriculum.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.adastra.curriculum.domain.Language;
 import org.adastra.curriculum.repository.LanguageRepository;
 import org.adastra.curriculum.service.dto.LanguageDTO;
@@ -98,6 +100,18 @@ public class LanguageService {
     public Optional<LanguageDTO> findOne(Long id) {
         LOG.debug("Request to get Language : {}", id);
         return languageRepository.findById(id).map(languageMapper::toDto);
+    }
+
+    /**
+     * Get all the languages by Biography ID.
+     *
+     * @param biographyId the biography ID.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<LanguageDTO> findAllByBiographyId(Long biographyId) {
+        LOG.debug("Request to get all Languages by Biography ID : {}", biographyId);
+        return languageRepository.findAllByBiographyId(biographyId).stream().map(languageMapper::toDto).collect(Collectors.toList());
     }
 
     /**

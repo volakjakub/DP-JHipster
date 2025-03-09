@@ -95,11 +95,11 @@ export const Biography = () => {
         Biographies
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
-            <FontAwesomeIcon icon="sync" spin={loading} /> Refresh list
+            <FontAwesomeIcon icon="sync" spin={loading} /> Obnovit
           </Button>
           <Link to="/biography/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
             <FontAwesomeIcon icon="plus" />
-            &nbsp; Vytvořit Biography
+            &nbsp; Vytvořit Životopis
           </Link>
         </div>
       </h2>
