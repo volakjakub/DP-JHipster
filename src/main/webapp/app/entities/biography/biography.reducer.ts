@@ -38,9 +38,16 @@ export const getEntity = createAsyncThunk(
 
 export const getEntityByUsername = createAsyncThunk(
   'biography/fetch_entity_by_username',
-  async (id: string | number) => {
-    const requestUrl = `${apiUrl}/user?username=${id}`;
-    return axios.get<IBiography>(requestUrl);
+  async (id: string | number, { rejectWithValue }) => {
+    try {
+      const requestUrl = `${apiUrl}/user?username=${id}`;
+      return axios.get<IBiography>(requestUrl);
+    } catch (error) {
+      if (error.response?.status === 404) {
+        return null; // Instead of rejecting, return null
+      }
+      return rejectWithValue(error.message);
+    }
   },
   { serializeError: serializeAxiosError },
 );
@@ -99,7 +106,7 @@ export const BiographySlice = createEntitySlice({
       })
       .addCase(getEntityByUsername.fulfilled, (state, action) => {
         state.loading = false;
-        state.entity = action.payload.data;
+        state.entity = action.payload?.data;
       })
       .addCase(deleteEntity.fulfilled, state => {
         state.updating = false;

@@ -27,6 +27,15 @@ export const getEntities = createAsyncThunk(
   { serializeError: serializeAxiosError },
 );
 
+export const getEntitiesByBiographyId = createAsyncThunk(
+  'language/fetch_entity_list_by_biography_id',
+  async (id: string | number) => {
+    const requestUrl = `${apiUrl}/biography?biographyId=${id}`;
+    return axios.get<ILanguage[]>(requestUrl);
+  },
+  { serializeError: serializeAxiosError },
+);
+
 export const getEntity = createAsyncThunk(
   'language/fetch_entity',
   async (id: string | number) => {

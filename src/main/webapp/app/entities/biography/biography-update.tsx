@@ -3,10 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Col, Row } from 'reactstrap';
 import { ValidatedBlobField, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-
-import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
 import { createEntity, getEntity, reset, updateEntity } from './biography.reducer';
 
 export const BiographyUpdate = () => {
@@ -17,14 +14,14 @@ export const BiographyUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const users = useAppSelector(state => state.userManagement.users);
+  const account = useAppSelector(state => state.authentication.account);
   const biographyEntity = useAppSelector(state => state.biography.entity);
   const loading = useAppSelector(state => state.biography.loading);
   const updating = useAppSelector(state => state.biography.updating);
   const updateSuccess = useAppSelector(state => state.biography.updateSuccess);
 
   const handleClose = () => {
-    navigate(`/biography${location.search}`);
+    navigate(`/biography/${biographyEntity?.id}`);
   };
 
   useEffect(() => {
@@ -33,8 +30,6 @@ export const BiographyUpdate = () => {
     } else {
       dispatch(getEntity(id));
     }
-
-    dispatch(getUsers({}));
   }, []);
 
   useEffect(() => {
@@ -51,7 +46,7 @@ export const BiographyUpdate = () => {
     const entity = {
       ...biographyEntity,
       ...values,
-      user: users.find(it => it.id.toString() === values.user?.toString()),
+      user: account,
     };
 
     if (isNew) {
@@ -74,19 +69,31 @@ export const BiographyUpdate = () => {
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="curriculumApp.biography.home.createOrEditLabel" data-cy="BiographyCreateUpdateHeading">
-            Vytvořit nebo upravit Biography
+            Vytvořit nebo upravit Životopis
           </h2>
         </Col>
       </Row>
       <Row className="justify-content-center">
         <Col md="8">
           {loading ? (
-            <p>Loading...</p>
+            <p>Načítání...</p>
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? <ValidatedField name="id" required readOnly id="biography-id" label="ID" validate={{ required: true }} /> : null}
+              {!isNew ? (
+                <ValidatedField name="id" required readOnly id="biography-id" label="ID" validate={{ required: true }} hidden={true} />
+              ) : null}
               <ValidatedField
-                label="First Name"
+                label="Titul"
+                id="biography-title"
+                name="title"
+                data-cy="title"
+                type="text"
+                validate={{
+                  maxLength: { value: 50, message: 'Toto pole nemůže být delší než 50 znaků.' },
+                }}
+              />
+              <ValidatedField
+                label="Křestní jméno"
                 id="biography-firstName"
                 name="firstName"
                 data-cy="firstName"
@@ -97,7 +104,7 @@ export const BiographyUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Last Name"
+                label="Přijmení"
                 id="biography-lastName"
                 name="lastName"
                 data-cy="lastName"
@@ -108,17 +115,7 @@ export const BiographyUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Title"
-                id="biography-title"
-                name="title"
-                data-cy="title"
-                type="text"
-                validate={{
-                  maxLength: { value: 50, message: 'Toto pole nemůže být delší než 50 znaků.' },
-                }}
-              />
-              <ValidatedField
-                label="Phone"
+                label="Telefon"
                 id="biography-phone"
                 name="phone"
                 data-cy="phone"
@@ -129,7 +126,7 @@ export const BiographyUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Email"
+                label="E-mail"
                 id="biography-email"
                 name="email"
                 data-cy="email"
@@ -139,8 +136,10 @@ export const BiographyUpdate = () => {
                   maxLength: { value: 50, message: 'Toto pole nemůže být delší než 50 znaků.' },
                 }}
               />
+              <ValidatedBlobField label="Fotografie" id="biography-image" name="image" data-cy="image" isImage accept="image/*" />
+              <hr />
               <ValidatedField
-                label="Street"
+                label="Ulice"
                 id="biography-street"
                 name="street"
                 data-cy="street"
@@ -151,7 +150,7 @@ export const BiographyUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="City"
+                label="Město"
                 id="biography-city"
                 name="city"
                 data-cy="city"
@@ -162,7 +161,7 @@ export const BiographyUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Country"
+                label="Země"
                 id="biography-country"
                 name="country"
                 data-cy="country"
@@ -172,8 +171,9 @@ export const BiographyUpdate = () => {
                   maxLength: { value: 50, message: 'Toto pole nemůže být delší než 50 znaků.' },
                 }}
               />
+              <hr />
               <ValidatedField
-                label="Position"
+                label="Pozice"
                 id="biography-position"
                 name="position"
                 data-cy="position"
@@ -184,7 +184,7 @@ export const BiographyUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Employed From"
+                label="Zaměstnán/a od"
                 id="biography-employedFrom"
                 name="employedFrom"
                 data-cy="employedFrom"
@@ -193,22 +193,24 @@ export const BiographyUpdate = () => {
                   required: { value: true, message: 'Toto pole je povinné.' },
                 }}
               />
-              <ValidatedBlobField label="Image" id="biography-image" name="image" data-cy="image" isImage accept="image/*" />
-              <ValidatedField id="biography-user" name="user" data-cy="user" label="User" type="select">
-                <option value="" key="0" />
-                {users
-                  ? users.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.login}
-                      </option>
-                    ))
-                  : null}
+              <ValidatedField id="biography-user" name="user" data-cy="user" label="Uživatel" type="select" required={true} hidden={true}>
+                <option defaultChecked={true} value={account.id} key={account.id}>
+                  {account.login}
+                </option>
               </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/biography" replace color="info">
-                <FontAwesomeIcon icon="arrow-left" />
-                &nbsp;
-                <span className="d-none d-md-inline">Zpět</span>
-              </Button>
+              {isNew ? (
+                <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to={`/`} replace color="info">
+                  <FontAwesomeIcon icon="arrow-left" />
+                  &nbsp;
+                  <span className="d-none d-md-inline">Zpět</span>
+                </Button>
+              ) : (
+                <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to={`/biography/${id}`} replace color="info">
+                  <FontAwesomeIcon icon="arrow-left" />
+                  &nbsp;
+                  <span className="d-none d-md-inline">Zpět</span>
+                </Button>
+              )}
               &nbsp;
               <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
