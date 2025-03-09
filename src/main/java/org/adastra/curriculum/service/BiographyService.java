@@ -110,6 +110,18 @@ public class BiographyService {
     }
 
     /**
+     * Get one biography by username.
+     *
+     * @param username the username of the entity.
+     * @return the entity.
+     */
+    @Transactional(readOnly = true)
+    public Optional<BiographyDTO> findOneByUsername(String username) {
+        LOG.debug("Request to get Biography by username : {}", username);
+        return biographyRepository.findOneByUsername(username).map(biographyMapper::toDto);
+    }
+
+    /**
      * Delete the biography by id.
      *
      * @param id the id of the entity.

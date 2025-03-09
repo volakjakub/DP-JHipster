@@ -26,6 +26,9 @@ public interface BiographyRepository extends JpaRepository<Biography, Long> {
         return this.findAllWithToOneRelationships(pageable);
     }
 
+    @Query("select biography from Biography biography left join fetch biography.user where biography.user.login =:login")
+    Optional<Biography> findOneByUsername(String login);
+
     @Query(
         value = "select biography from Biography biography left join fetch biography.user",
         countQuery = "select count(biography) from Biography biography"
