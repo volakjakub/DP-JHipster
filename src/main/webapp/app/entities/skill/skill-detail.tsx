@@ -37,6 +37,17 @@ export const SkillDetail = () => {
           <dd>{skillEntity.expertise}</dd>
           <dt>Biography</dt>
           <dd>{skillEntity.biography ? skillEntity.biography.id : ''}</dd>
+          <dt>Projects</dt>
+          <dd>
+            {skillEntity.projects
+              ? skillEntity.projects.map((val, i) => (
+                  <span key={val.id}>
+                    <a>{val.id}</a>
+                    {skillEntity.projects && i === skillEntity.projects.length - 1 ? '' : ', '}
+                  </span>
+                ))
+              : null}
+          </dd>
         </dl>
         <Button tag={Link} to="/skill" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Zpět</span>

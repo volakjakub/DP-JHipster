@@ -5,15 +5,16 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import org.adastra.curriculum.domain.enumeration.EducationType;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * A Education.
+ * A Project.
  */
 @Entity
-@Table(name = "education")
+@Table(name = "project")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Education implements Serializable {
+public class Project implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -25,13 +26,13 @@ public class Education implements Serializable {
 
     @NotNull
     @Size(max = 50)
-    @Column(name = "school", length = 50, nullable = false)
-    private String school;
+    @Column(name = "name", length = 50, nullable = false)
+    private String name;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    private EducationType type;
+    @Size(max = 50)
+    @Column(name = "client", length = 50, nullable = false)
+    private String client;
 
     @NotNull
     @Column(name = "start", nullable = false)
@@ -40,9 +41,21 @@ public class Education implements Serializable {
     @Column(name = "jhi_end")
     private LocalDate end;
 
+    @Column(name = "description")
+    private String description;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "user", "educations", "languages", "skills", "projects" }, allowSetters = true)
     private Biography biography;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "rel_project__skills",
+        joinColumns = @JoinColumn(name = "project_id"),
+        inverseJoinColumns = @JoinColumn(name = "skills_id")
+    )
+    @JsonIgnoreProperties(value = { "biography", "projects" }, allowSetters = true)
+    private Set<Skill> skills = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -50,7 +63,7 @@ public class Education implements Serializable {
         return this.id;
     }
 
-    public Education id(Long id) {
+    public Project id(Long id) {
         this.setId(id);
         return this;
     }
@@ -59,37 +72,37 @@ public class Education implements Serializable {
         this.id = id;
     }
 
-    public String getSchool() {
-        return this.school;
+    public String getName() {
+        return this.name;
     }
 
-    public Education school(String school) {
-        this.setSchool(school);
+    public Project name(String name) {
+        this.setName(name);
         return this;
     }
 
-    public void setSchool(String school) {
-        this.school = school;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public EducationType getType() {
-        return this.type;
+    public String getClient() {
+        return this.client;
     }
 
-    public Education type(EducationType type) {
-        this.setType(type);
+    public Project client(String client) {
+        this.setClient(client);
         return this;
     }
 
-    public void setType(EducationType type) {
-        this.type = type;
+    public void setClient(String client) {
+        this.client = client;
     }
 
     public LocalDate getStart() {
         return this.start;
     }
 
-    public Education start(LocalDate start) {
+    public Project start(LocalDate start) {
         this.setStart(start);
         return this;
     }
@@ -102,13 +115,26 @@ public class Education implements Serializable {
         return this.end;
     }
 
-    public Education end(LocalDate end) {
+    public Project end(LocalDate end) {
         this.setEnd(end);
         return this;
     }
 
     public void setEnd(LocalDate end) {
         this.end = end;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public Project description(String description) {
+        this.setDescription(description);
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Biography getBiography() {
@@ -119,8 +145,31 @@ public class Education implements Serializable {
         this.biography = biography;
     }
 
-    public Education biography(Biography biography) {
+    public Project biography(Biography biography) {
         this.setBiography(biography);
+        return this;
+    }
+
+    public Set<Skill> getSkills() {
+        return this.skills;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
+    }
+
+    public Project skills(Set<Skill> skills) {
+        this.setSkills(skills);
+        return this;
+    }
+
+    public Project addSkills(Skill skill) {
+        this.skills.add(skill);
+        return this;
+    }
+
+    public Project removeSkills(Skill skill) {
+        this.skills.remove(skill);
         return this;
     }
 
@@ -131,10 +180,10 @@ public class Education implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Education)) {
+        if (!(o instanceof Project)) {
             return false;
         }
-        return getId() != null && getId().equals(((Education) o).getId());
+        return getId() != null && getId().equals(((Project) o).getId());
     }
 
     @Override
@@ -146,12 +195,13 @@ public class Education implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "Education{" +
+        return "Project{" +
             "id=" + getId() +
-            ", school='" + getSchool() + "'" +
-            ", type='" + getType() + "'" +
+            ", name='" + getName() + "'" +
+            ", client='" + getClient() + "'" +
             ", start='" + getStart() + "'" +
             ", end='" + getEnd() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }

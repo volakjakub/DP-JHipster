@@ -345,7 +345,7 @@ class EducationResourceIT {
         Education partialUpdatedEducation = new Education();
         partialUpdatedEducation.setId(education.getId());
 
-        partialUpdatedEducation.school(UPDATED_SCHOOL).type(UPDATED_TYPE);
+        partialUpdatedEducation.school(UPDATED_SCHOOL).start(UPDATED_START);
 
         restEducationMockMvc
             .perform(

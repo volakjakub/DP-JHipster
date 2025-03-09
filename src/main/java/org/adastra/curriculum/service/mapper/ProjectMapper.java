@@ -11,30 +11,30 @@ import org.adastra.curriculum.service.dto.SkillDTO;
 import org.mapstruct.*;
 
 /**
- * Mapper for the entity {@link Skill} and its DTO {@link SkillDTO}.
+ * Mapper for the entity {@link Project} and its DTO {@link ProjectDTO}.
  */
 @Mapper(componentModel = "spring")
-public interface SkillMapper extends EntityMapper<SkillDTO, Skill> {
+public interface ProjectMapper extends EntityMapper<ProjectDTO, Project> {
     @Mapping(target = "biography", source = "biography", qualifiedByName = "biographyId")
-    @Mapping(target = "projects", source = "projects", qualifiedByName = "projectIdSet")
-    SkillDTO toDto(Skill s);
+    @Mapping(target = "skills", source = "skills", qualifiedByName = "skillNameSet")
+    ProjectDTO toDto(Project s);
 
-    @Mapping(target = "projects", ignore = true)
-    @Mapping(target = "removeProjects", ignore = true)
-    Skill toEntity(SkillDTO skillDTO);
+    @Mapping(target = "removeSkills", ignore = true)
+    Project toEntity(ProjectDTO projectDTO);
 
     @Named("biographyId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     BiographyDTO toDtoBiographyId(Biography biography);
 
-    @Named("projectId")
+    @Named("skillName")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    ProjectDTO toDtoProjectId(Project project);
+    @Mapping(target = "name", source = "name")
+    SkillDTO toDtoSkillName(Skill skill);
 
-    @Named("projectIdSet")
-    default Set<ProjectDTO> toDtoProjectIdSet(Set<Project> project) {
-        return project.stream().map(this::toDtoProjectId).collect(Collectors.toSet());
+    @Named("skillNameSet")
+    default Set<SkillDTO> toDtoSkillNameSet(Set<Skill> skill) {
+        return skill.stream().map(this::toDtoSkillName).collect(Collectors.toSet());
     }
 }

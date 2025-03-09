@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Col, Row } from 'reactstrap';
-import { ValidatedField, ValidatedForm, isNumber } from 'react-jhipster';
+import { ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities as getBiographies } from 'app/entities/biography/biography.reducer';
-import { getEntities as getProjects } from 'app/entities/project/project.reducer';
-import { createEntity, getEntity, reset, updateEntity } from './skill.reducer';
+import { getEntities as getSkills } from 'app/entities/skill/skill.reducer';
+import { createEntity, getEntity, reset, updateEntity } from './project.reducer';
 
-export const SkillUpdate = () => {
+export const ProjectUpdate = () => {
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
@@ -20,14 +20,14 @@ export const SkillUpdate = () => {
   const isNew = id === undefined;
 
   const biographies = useAppSelector(state => state.biography.entities);
-  const projects = useAppSelector(state => state.project.entities);
-  const skillEntity = useAppSelector(state => state.skill.entity);
-  const loading = useAppSelector(state => state.skill.loading);
-  const updating = useAppSelector(state => state.skill.updating);
-  const updateSuccess = useAppSelector(state => state.skill.updateSuccess);
+  const skills = useAppSelector(state => state.skill.entities);
+  const projectEntity = useAppSelector(state => state.project.entity);
+  const loading = useAppSelector(state => state.project.loading);
+  const updating = useAppSelector(state => state.project.updating);
+  const updateSuccess = useAppSelector(state => state.project.updateSuccess);
 
   const handleClose = () => {
-    navigate(`/skill${location.search}`);
+    navigate(`/project${location.search}`);
   };
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export const SkillUpdate = () => {
     }
 
     dispatch(getBiographies({}));
-    dispatch(getProjects({}));
+    dispatch(getSkills({}));
   }, []);
 
   useEffect(() => {
@@ -51,15 +51,12 @@ export const SkillUpdate = () => {
     if (values.id !== undefined && typeof values.id !== 'number') {
       values.id = Number(values.id);
     }
-    if (values.expertise !== undefined && typeof values.expertise !== 'number') {
-      values.expertise = Number(values.expertise);
-    }
 
     const entity = {
-      ...skillEntity,
+      ...projectEntity,
       ...values,
       biography: biographies.find(it => it.id.toString() === values.biography?.toString()),
-      projects: mapIdList(values.projects),
+      skills: mapIdList(values.skills),
     };
 
     if (isNew) {
@@ -73,17 +70,17 @@ export const SkillUpdate = () => {
     isNew
       ? {}
       : {
-          ...skillEntity,
-          biography: skillEntity?.biography?.id,
-          projects: skillEntity?.projects?.map(e => e.id.toString()),
+          ...projectEntity,
+          biography: projectEntity?.biography?.id,
+          skills: projectEntity?.skills?.map(e => e.id.toString()),
         };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="curriculumApp.skill.home.createOrEditLabel" data-cy="SkillCreateUpdateHeading">
-            Vytvořit nebo upravit Skill
+          <h2 id="curriculumApp.project.home.createOrEditLabel" data-cy="ProjectCreateUpdateHeading">
+            Vytvořit nebo upravit Project
           </h2>
         </Col>
       </Row>
@@ -93,10 +90,10 @@ export const SkillUpdate = () => {
             <p>Loading...</p>
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? <ValidatedField name="id" required readOnly id="skill-id" label="ID" validate={{ required: true }} /> : null}
+              {!isNew ? <ValidatedField name="id" required readOnly id="project-id" label="ID" validate={{ required: true }} /> : null}
               <ValidatedField
                 label="Name"
-                id="skill-name"
+                id="project-name"
                 name="name"
                 data-cy="name"
                 type="text"
@@ -106,17 +103,29 @@ export const SkillUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Expertise"
-                id="skill-expertise"
-                name="expertise"
-                data-cy="expertise"
+                label="Client"
+                id="project-client"
+                name="client"
+                data-cy="client"
                 type="text"
                 validate={{
                   required: { value: true, message: 'Toto pole je povinné.' },
-                  validate: v => isNumber(v) || 'Toto pole by mělo obsahovat číslo.',
+                  maxLength: { value: 50, message: 'Toto pole nemůže být delší než 50 znaků.' },
                 }}
               />
-              <ValidatedField id="skill-biography" name="biography" data-cy="biography" label="Biography" type="select">
+              <ValidatedField
+                label="Start"
+                id="project-start"
+                name="start"
+                data-cy="start"
+                type="date"
+                validate={{
+                  required: { value: true, message: 'Toto pole je povinné.' },
+                }}
+              />
+              <ValidatedField label="End" id="project-end" name="end" data-cy="end" type="date" />
+              <ValidatedField label="Description" id="project-description" name="description" data-cy="description" type="text" />
+              <ValidatedField id="project-biography" name="biography" data-cy="biography" label="Biography" type="select">
                 <option value="" key="0" />
                 {biographies
                   ? biographies.map(otherEntity => (
@@ -126,17 +135,17 @@ export const SkillUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <ValidatedField label="Projects" id="skill-projects" data-cy="projects" type="select" multiple name="projects">
+              <ValidatedField label="Skills" id="project-skills" data-cy="skills" type="select" multiple name="skills">
                 <option value="" key="0" />
-                {projects
-                  ? projects.map(otherEntity => (
+                {skills
+                  ? skills.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.name}
                       </option>
                     ))
                   : null}
               </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/skill" replace color="info">
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/project" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">Zpět</span>
@@ -154,4 +163,4 @@ export const SkillUpdate = () => {
   );
 };
 
-export default SkillUpdate;
+export default ProjectUpdate;

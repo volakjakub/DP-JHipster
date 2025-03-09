@@ -106,8 +106,7 @@ export const LanguageUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: 'Toto pole je povinné.' },
-                  validate: v =>
-                    (isNumber(v) || 'Toto pole by mělo obsahovat číslo.') && ((v >= 1 && v <= 5) || 'Hodnota musí být mezi 1 a 5.'),
+                  validate: v => isNumber(v) || 'Toto pole by mělo obsahovat číslo.',
                 }}
               />
               <ValidatedField id="language-biography" name="biography" data-cy="biography" label="Biography" type="select">

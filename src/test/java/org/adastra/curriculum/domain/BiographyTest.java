@@ -3,6 +3,7 @@ package org.adastra.curriculum.domain;
 import static org.adastra.curriculum.domain.BiographyTestSamples.*;
 import static org.adastra.curriculum.domain.EducationTestSamples.*;
 import static org.adastra.curriculum.domain.LanguageTestSamples.*;
+import static org.adastra.curriculum.domain.ProjectTestSamples.*;
 import static org.adastra.curriculum.domain.SkillTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -91,5 +92,27 @@ class BiographyTest {
         biography.setSkills(new HashSet<>());
         assertThat(biography.getSkills()).doesNotContain(skillBack);
         assertThat(skillBack.getBiography()).isNull();
+    }
+
+    @Test
+    void projectsTest() {
+        Biography biography = getBiographyRandomSampleGenerator();
+        Project projectBack = getProjectRandomSampleGenerator();
+
+        biography.addProjects(projectBack);
+        assertThat(biography.getProjects()).containsOnly(projectBack);
+        assertThat(projectBack.getBiography()).isEqualTo(biography);
+
+        biography.removeProjects(projectBack);
+        assertThat(biography.getProjects()).doesNotContain(projectBack);
+        assertThat(projectBack.getBiography()).isNull();
+
+        biography.projects(new HashSet<>(Set.of(projectBack)));
+        assertThat(biography.getProjects()).containsOnly(projectBack);
+        assertThat(projectBack.getBiography()).isEqualTo(biography);
+
+        biography.setProjects(new HashSet<>());
+        assertThat(biography.getProjects()).doesNotContain(projectBack);
+        assertThat(projectBack.getBiography()).isNull();
     }
 }

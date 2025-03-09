@@ -2,7 +2,9 @@ package org.adastra.curriculum.service.dto;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link org.adastra.curriculum.domain.Skill} entity.
@@ -20,6 +22,8 @@ public class SkillDTO implements Serializable {
     private Integer expertise;
 
     private BiographyDTO biography;
+
+    private Set<ProjectDTO> projects = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -53,6 +57,14 @@ public class SkillDTO implements Serializable {
         this.biography = biography;
     }
 
+    public Set<ProjectDTO> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<ProjectDTO> projects) {
+        this.projects = projects;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -82,6 +94,7 @@ public class SkillDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", expertise=" + getExpertise() +
             ", biography=" + getBiography() +
+            ", projects=" + getProjects() +
             "}";
     }
 }

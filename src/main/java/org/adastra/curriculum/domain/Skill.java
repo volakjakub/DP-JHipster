@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Skill.
@@ -27,14 +29,16 @@ public class Skill implements Serializable {
     private String name;
 
     @NotNull
-    @Min(value = 1)
-    @Max(value = 5)
     @Column(name = "expertise", nullable = false)
     private Integer expertise;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "user", "educations", "languages", "skills" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "user", "educations", "languages", "skills", "projects" }, allowSetters = true)
     private Biography biography;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "skills")
+    @JsonIgnoreProperties(value = { "biography", "skills" }, allowSetters = true)
+    private Set<Project> projects = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -87,6 +91,37 @@ public class Skill implements Serializable {
 
     public Skill biography(Biography biography) {
         this.setBiography(biography);
+        return this;
+    }
+
+    public Set<Project> getProjects() {
+        return this.projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        if (this.projects != null) {
+            this.projects.forEach(i -> i.removeSkills(this));
+        }
+        if (projects != null) {
+            projects.forEach(i -> i.addSkills(this));
+        }
+        this.projects = projects;
+    }
+
+    public Skill projects(Set<Project> projects) {
+        this.setProjects(projects);
+        return this;
+    }
+
+    public Skill addProjects(Project project) {
+        this.projects.add(project);
+        project.getSkills().add(this);
+        return this;
+    }
+
+    public Skill removeProjects(Project project) {
+        this.projects.remove(project);
+        project.getSkills().remove(this);
         return this;
     }
 

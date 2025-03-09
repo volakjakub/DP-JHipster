@@ -89,8 +89,12 @@ public class Biography implements Serializable {
     private Set<Language> languages = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "biography")
-    @JsonIgnoreProperties(value = { "biography" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "biography", "projects" }, allowSetters = true)
     private Set<Skill> skills = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "biography")
+    @JsonIgnoreProperties(value = { "biography", "skills" }, allowSetters = true)
+    private Set<Project> projects = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -353,6 +357,37 @@ public class Biography implements Serializable {
     public Biography removeSkills(Skill skill) {
         this.skills.remove(skill);
         skill.setBiography(null);
+        return this;
+    }
+
+    public Set<Project> getProjects() {
+        return this.projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        if (this.projects != null) {
+            this.projects.forEach(i -> i.setBiography(null));
+        }
+        if (projects != null) {
+            projects.forEach(i -> i.setBiography(this));
+        }
+        this.projects = projects;
+    }
+
+    public Biography projects(Set<Project> projects) {
+        this.setProjects(projects);
+        return this;
+    }
+
+    public Biography addProjects(Project project) {
+        this.projects.add(project);
+        project.setBiography(this);
+        return this;
+    }
+
+    public Biography removeProjects(Project project) {
+        this.projects.remove(project);
+        project.setBiography(null);
         return this;
     }
 
