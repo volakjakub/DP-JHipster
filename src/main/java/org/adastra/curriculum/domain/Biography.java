@@ -84,6 +84,10 @@ public class Biography implements Serializable {
     @JsonIgnoreProperties(value = { "biography" }, allowSetters = true)
     private Set<Education> educations = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "biography")
+    @JsonIgnoreProperties(value = { "biography" }, allowSetters = true)
+    private Set<Language> languages = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -283,6 +287,37 @@ public class Biography implements Serializable {
     public Biography removeEducations(Education education) {
         this.educations.remove(education);
         education.setBiography(null);
+        return this;
+    }
+
+    public Set<Language> getLanguages() {
+        return this.languages;
+    }
+
+    public void setLanguages(Set<Language> languages) {
+        if (this.languages != null) {
+            this.languages.forEach(i -> i.setBiography(null));
+        }
+        if (languages != null) {
+            languages.forEach(i -> i.setBiography(this));
+        }
+        this.languages = languages;
+    }
+
+    public Biography languages(Set<Language> languages) {
+        this.setLanguages(languages);
+        return this;
+    }
+
+    public Biography addLanguages(Language language) {
+        this.languages.add(language);
+        language.setBiography(this);
+        return this;
+    }
+
+    public Biography removeLanguages(Language language) {
+        this.languages.remove(language);
+        language.setBiography(null);
         return this;
     }
 

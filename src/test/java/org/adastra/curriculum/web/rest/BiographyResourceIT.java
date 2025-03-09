@@ -550,7 +550,14 @@ class BiographyResourceIT {
         Biography partialUpdatedBiography = new Biography();
         partialUpdatedBiography.setId(biography.getId());
 
-        partialUpdatedBiography.title(UPDATED_TITLE).phone(UPDATED_PHONE).position(UPDATED_POSITION).employedFrom(UPDATED_EMPLOYED_FROM);
+        partialUpdatedBiography
+            .firstName(UPDATED_FIRST_NAME)
+            .lastName(UPDATED_LAST_NAME)
+            .title(UPDATED_TITLE)
+            .phone(UPDATED_PHONE)
+            .street(UPDATED_STREET)
+            .employedFrom(UPDATED_EMPLOYED_FROM)
+            .image(UPDATED_IMAGE);
 
         restBiographyMockMvc
             .perform(

@@ -2,6 +2,7 @@ package org.adastra.curriculum.domain;
 
 import static org.adastra.curriculum.domain.BiographyTestSamples.*;
 import static org.adastra.curriculum.domain.EducationTestSamples.*;
+import static org.adastra.curriculum.domain.LanguageTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashSet;
@@ -45,5 +46,27 @@ class BiographyTest {
         biography.setEducations(new HashSet<>());
         assertThat(biography.getEducations()).doesNotContain(educationBack);
         assertThat(educationBack.getBiography()).isNull();
+    }
+
+    @Test
+    void languagesTest() {
+        Biography biography = getBiographyRandomSampleGenerator();
+        Language languageBack = getLanguageRandomSampleGenerator();
+
+        biography.addLanguages(languageBack);
+        assertThat(biography.getLanguages()).containsOnly(languageBack);
+        assertThat(languageBack.getBiography()).isEqualTo(biography);
+
+        biography.removeLanguages(languageBack);
+        assertThat(biography.getLanguages()).doesNotContain(languageBack);
+        assertThat(languageBack.getBiography()).isNull();
+
+        biography.languages(new HashSet<>(Set.of(languageBack)));
+        assertThat(biography.getLanguages()).containsOnly(languageBack);
+        assertThat(languageBack.getBiography()).isEqualTo(biography);
+
+        biography.setLanguages(new HashSet<>());
+        assertThat(biography.getLanguages()).doesNotContain(languageBack);
+        assertThat(languageBack.getBiography()).isNull();
     }
 }
