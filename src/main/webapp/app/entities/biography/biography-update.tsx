@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button, Col, Row } from 'reactstrap';
-import { ValidatedField, ValidatedForm } from 'react-jhipster';
+import { ValidatedBlobField, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
@@ -193,16 +193,7 @@ export const BiographyUpdate = () => {
                   required: { value: true, message: 'Toto pole je povinné.' },
                 }}
               />
-              <ValidatedField
-                label="Image"
-                id="biography-image"
-                name="image"
-                data-cy="image"
-                type="text"
-                validate={{
-                  maxLength: { value: 50, message: 'Toto pole nemůže být delší než 50 znaků.' },
-                }}
-              />
+              <ValidatedBlobField label="Image" id="biography-image" name="image" data-cy="image" isImage accept="image/*" />
               <ValidatedField id="biography-user" name="user" data-cy="user" label="User" type="select">
                 <option value="" key="0" />
                 {users

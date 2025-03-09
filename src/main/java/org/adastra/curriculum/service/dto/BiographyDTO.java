@@ -1,5 +1,6 @@
 package org.adastra.curriculum.service.dto;
 
+import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -51,8 +52,10 @@ public class BiographyDTO implements Serializable {
     @NotNull
     private LocalDate employedFrom;
 
-    @Size(max = 50)
-    private String image;
+    @Lob
+    private byte[] image;
+
+    private String imageContentType;
 
     private UserDTO user;
 
@@ -144,12 +147,20 @@ public class BiographyDTO implements Serializable {
         this.employedFrom = employedFrom;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public String getImageContentType() {
+        return imageContentType;
+    }
+
+    public void setImageContentType(String imageContentType) {
+        this.imageContentType = imageContentType;
     }
 
     public UserDTO getUser() {

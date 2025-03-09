@@ -13,6 +13,7 @@ export interface IBiography {
   country?: string;
   position?: string;
   employedFrom?: dayjs.Dayjs;
+  imageContentType?: string | null;
   image?: string | null;
   user?: IUser | null;
 }

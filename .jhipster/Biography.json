@@ -65,9 +65,7 @@
     },
     {
       "fieldName": "image",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "50"
+      "fieldType": "ImageBlob"
     }
   ],
   "jpaMetamodelFiltering": false,

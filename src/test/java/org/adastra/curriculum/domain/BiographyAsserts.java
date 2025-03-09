@@ -57,7 +57,8 @@ public class BiographyAsserts {
             .satisfies(a -> assertThat(a.getCountry()).as("check country").isEqualTo(expected.getCountry()))
             .satisfies(a -> assertThat(a.getPosition()).as("check position").isEqualTo(expected.getPosition()))
             .satisfies(a -> assertThat(a.getEmployedFrom()).as("check employedFrom").isEqualTo(expected.getEmployedFrom()))
-            .satisfies(a -> assertThat(a.getImage()).as("check image").isEqualTo(expected.getImage()));
+            .satisfies(a -> assertThat(a.getImage()).as("check image").isEqualTo(expected.getImage()))
+            .satisfies(a -> assertThat(a.getImageContentType()).as("check image contenty type").isEqualTo(expected.getImageContentType()));
     }
 
     /**
