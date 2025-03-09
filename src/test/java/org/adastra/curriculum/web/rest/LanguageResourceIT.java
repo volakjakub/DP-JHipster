@@ -316,7 +316,7 @@ class LanguageResourceIT {
         Language partialUpdatedLanguage = new Language();
         partialUpdatedLanguage.setId(language.getId());
 
-        partialUpdatedLanguage.name(UPDATED_NAME).expertise(UPDATED_EXPERTISE);
+        partialUpdatedLanguage.name(UPDATED_NAME);
 
         restLanguageMockMvc
             .perform(
