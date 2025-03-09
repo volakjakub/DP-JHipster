@@ -4,15 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import org.adastra.curriculum.domain.enumeration.LanguageName;
 
 /**
- * A Language.
+ * A Skill.
  */
 @Entity
-@Table(name = "language")
+@Table(name = "skill")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Language implements Serializable {
+public class Skill implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,9 +22,9 @@ public class Language implements Serializable {
     private Long id;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
-    @Column(name = "name", nullable = false)
-    private LanguageName name;
+    @Size(max = 50)
+    @Column(name = "name", length = 50, nullable = false)
+    private String name;
 
     @NotNull
     @Min(value = 1)
@@ -43,7 +42,7 @@ public class Language implements Serializable {
         return this.id;
     }
 
-    public Language id(Long id) {
+    public Skill id(Long id) {
         this.setId(id);
         return this;
     }
@@ -52,16 +51,16 @@ public class Language implements Serializable {
         this.id = id;
     }
 
-    public LanguageName getName() {
+    public String getName() {
         return this.name;
     }
 
-    public Language name(LanguageName name) {
+    public Skill name(String name) {
         this.setName(name);
         return this;
     }
 
-    public void setName(LanguageName name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -69,7 +68,7 @@ public class Language implements Serializable {
         return this.expertise;
     }
 
-    public Language expertise(Integer expertise) {
+    public Skill expertise(Integer expertise) {
         this.setExpertise(expertise);
         return this;
     }
@@ -86,7 +85,7 @@ public class Language implements Serializable {
         this.biography = biography;
     }
 
-    public Language biography(Biography biography) {
+    public Skill biography(Biography biography) {
         this.setBiography(biography);
         return this;
     }
@@ -98,10 +97,10 @@ public class Language implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Language)) {
+        if (!(o instanceof Skill)) {
             return false;
         }
-        return getId() != null && getId().equals(((Language) o).getId());
+        return getId() != null && getId().equals(((Skill) o).getId());
     }
 
     @Override
@@ -113,7 +112,7 @@ public class Language implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "Language{" +
+        return "Skill{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", expertise=" + getExpertise() +

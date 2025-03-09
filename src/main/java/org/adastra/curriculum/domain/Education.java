@@ -41,7 +41,7 @@ public class Education implements Serializable {
     private LocalDate end;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "user", "educations", "languages" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "user", "educations", "languages", "skills" }, allowSetters = true)
     private Biography biography;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

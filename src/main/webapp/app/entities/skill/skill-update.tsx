@@ -7,10 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities as getBiographies } from 'app/entities/biography/biography.reducer';
-import { LanguageName } from 'app/shared/model/enumerations/language-name.model';
-import { createEntity, getEntity, reset, updateEntity } from './language.reducer';
+import { createEntity, getEntity, reset, updateEntity } from './skill.reducer';
 
-export const LanguageUpdate = () => {
+export const SkillUpdate = () => {
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
@@ -19,14 +18,13 @@ export const LanguageUpdate = () => {
   const isNew = id === undefined;
 
   const biographies = useAppSelector(state => state.biography.entities);
-  const languageEntity = useAppSelector(state => state.language.entity);
-  const loading = useAppSelector(state => state.language.loading);
-  const updating = useAppSelector(state => state.language.updating);
-  const updateSuccess = useAppSelector(state => state.language.updateSuccess);
-  const languageNameValues = Object.keys(LanguageName);
+  const skillEntity = useAppSelector(state => state.skill.entity);
+  const loading = useAppSelector(state => state.skill.loading);
+  const updating = useAppSelector(state => state.skill.updating);
+  const updateSuccess = useAppSelector(state => state.skill.updateSuccess);
 
   const handleClose = () => {
-    navigate(`/language${location.search}`);
+    navigate(`/skill${location.search}`);
   };
 
   useEffect(() => {
@@ -54,7 +52,7 @@ export const LanguageUpdate = () => {
     }
 
     const entity = {
-      ...languageEntity,
+      ...skillEntity,
       ...values,
       biography: biographies.find(it => it.id.toString() === values.biography?.toString()),
     };
@@ -70,17 +68,16 @@ export const LanguageUpdate = () => {
     isNew
       ? {}
       : {
-          name: 'CZECH',
-          ...languageEntity,
-          biography: languageEntity?.biography?.id,
+          ...skillEntity,
+          biography: skillEntity?.biography?.id,
         };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="curriculumApp.language.home.createOrEditLabel" data-cy="LanguageCreateUpdateHeading">
-            Vytvořit nebo upravit Language
+          <h2 id="curriculumApp.skill.home.createOrEditLabel" data-cy="SkillCreateUpdateHeading">
+            Vytvořit nebo upravit Skill
           </h2>
         </Col>
       </Row>
@@ -90,17 +87,21 @@ export const LanguageUpdate = () => {
             <p>Loading...</p>
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? <ValidatedField name="id" required readOnly id="language-id" label="ID" validate={{ required: true }} /> : null}
-              <ValidatedField label="Name" id="language-name" name="name" data-cy="name" type="select">
-                {languageNameValues.map(languageName => (
-                  <option value={languageName} key={languageName}>
-                    {languageName}
-                  </option>
-                ))}
-              </ValidatedField>
+              {!isNew ? <ValidatedField name="id" required readOnly id="skill-id" label="ID" validate={{ required: true }} /> : null}
+              <ValidatedField
+                label="Name"
+                id="skill-name"
+                name="name"
+                data-cy="name"
+                type="text"
+                validate={{
+                  required: { value: true, message: 'Toto pole je povinné.' },
+                  maxLength: { value: 50, message: 'Toto pole nemůže být delší než 50 znaků.' },
+                }}
+              />
               <ValidatedField
                 label="Expertise"
-                id="language-expertise"
+                id="skill-expertise"
                 name="expertise"
                 data-cy="expertise"
                 type="text"
@@ -110,7 +111,7 @@ export const LanguageUpdate = () => {
                     (isNumber(v) || 'Toto pole by mělo obsahovat číslo.') && ((v >= 1 && v <= 5) || 'Hodnota musí být mezi 1 a 5.'),
                 }}
               />
-              <ValidatedField id="language-biography" name="biography" data-cy="biography" label="Biography" type="select">
+              <ValidatedField id="skill-biography" name="biography" data-cy="biography" label="Biography" type="select">
                 <option value="" key="0" />
                 {biographies
                   ? biographies.map(otherEntity => (
@@ -120,7 +121,7 @@ export const LanguageUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/language" replace color="info">
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/skill" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">Zpět</span>
@@ -138,4 +139,4 @@ export const LanguageUpdate = () => {
   );
 };
 
-export default LanguageUpdate;
+export default SkillUpdate;
