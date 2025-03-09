@@ -4,16 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.time.LocalDate;
-import org.adastra.curriculum.domain.enumeration.EducationType;
+import org.adastra.curriculum.domain.enumeration.LanguageName;
 
 /**
- * A Education.
+ * A Language.
  */
 @Entity
-@Table(name = "education")
+@Table(name = "language")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Education implements Serializable {
+public class Language implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,21 +23,13 @@ public class Education implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(max = 50)
-    @Column(name = "school", length = 50, nullable = false)
-    private String school;
-
-    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    private EducationType type;
+    @Column(name = "name", nullable = false)
+    private LanguageName name;
 
     @NotNull
-    @Column(name = "start", nullable = false)
-    private LocalDate start;
-
-    @Column(name = "jhi_end")
-    private LocalDate end;
+    @Column(name = "expertise", nullable = false)
+    private Integer expertise;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "user", "educations", "languages" }, allowSetters = true)
@@ -50,7 +41,7 @@ public class Education implements Serializable {
         return this.id;
     }
 
-    public Education id(Long id) {
+    public Language id(Long id) {
         this.setId(id);
         return this;
     }
@@ -59,56 +50,30 @@ public class Education implements Serializable {
         this.id = id;
     }
 
-    public String getSchool() {
-        return this.school;
+    public LanguageName getName() {
+        return this.name;
     }
 
-    public Education school(String school) {
-        this.setSchool(school);
+    public Language name(LanguageName name) {
+        this.setName(name);
         return this;
     }
 
-    public void setSchool(String school) {
-        this.school = school;
+    public void setName(LanguageName name) {
+        this.name = name;
     }
 
-    public EducationType getType() {
-        return this.type;
+    public Integer getExpertise() {
+        return this.expertise;
     }
 
-    public Education type(EducationType type) {
-        this.setType(type);
+    public Language expertise(Integer expertise) {
+        this.setExpertise(expertise);
         return this;
     }
 
-    public void setType(EducationType type) {
-        this.type = type;
-    }
-
-    public LocalDate getStart() {
-        return this.start;
-    }
-
-    public Education start(LocalDate start) {
-        this.setStart(start);
-        return this;
-    }
-
-    public void setStart(LocalDate start) {
-        this.start = start;
-    }
-
-    public LocalDate getEnd() {
-        return this.end;
-    }
-
-    public Education end(LocalDate end) {
-        this.setEnd(end);
-        return this;
-    }
-
-    public void setEnd(LocalDate end) {
-        this.end = end;
+    public void setExpertise(Integer expertise) {
+        this.expertise = expertise;
     }
 
     public Biography getBiography() {
@@ -119,7 +84,7 @@ public class Education implements Serializable {
         this.biography = biography;
     }
 
-    public Education biography(Biography biography) {
+    public Language biography(Biography biography) {
         this.setBiography(biography);
         return this;
     }
@@ -131,10 +96,10 @@ public class Education implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Education)) {
+        if (!(o instanceof Language)) {
             return false;
         }
-        return getId() != null && getId().equals(((Education) o).getId());
+        return getId() != null && getId().equals(((Language) o).getId());
     }
 
     @Override
@@ -146,12 +111,10 @@ public class Education implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "Education{" +
+        return "Language{" +
             "id=" + getId() +
-            ", school='" + getSchool() + "'" +
-            ", type='" + getType() + "'" +
-            ", start='" + getStart() + "'" +
-            ", end='" + getEnd() + "'" +
+            ", name='" + getName() + "'" +
+            ", expertise=" + getExpertise() +
             "}";
     }
 }
