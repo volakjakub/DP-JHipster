@@ -27,7 +27,7 @@ export const getEntities = createAsyncThunk(
   { serializeError: serializeAxiosError },
 );
 
-export const getEntitiesByBiographyId = createAsyncThunk(
+export const getLanguageEntitiesByBiographyId = createAsyncThunk(
   'language/fetch_entity_list_by_biography_id',
   async (id: string | number) => {
     const requestUrl = `${apiUrl}/biography?biographyId=${id}`;
@@ -96,6 +96,10 @@ export const LanguageSlice = createEntitySlice({
       .addCase(getEntity.fulfilled, (state, action) => {
         state.loading = false;
         state.entity = action.payload.data;
+      })
+      .addCase(getLanguageEntitiesByBiographyId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.entities = action.payload.data;
       })
       .addCase(deleteEntity.fulfilled, state => {
         state.updating = false;

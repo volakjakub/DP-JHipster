@@ -1,6 +1,8 @@
 package org.adastra.curriculum.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.adastra.curriculum.domain.Education;
 import org.adastra.curriculum.repository.EducationRepository;
 import org.adastra.curriculum.service.dto.EducationDTO;
@@ -86,6 +88,18 @@ public class EducationService {
     public Page<EducationDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Educations");
         return educationRepository.findAll(pageable).map(educationMapper::toDto);
+    }
+
+    /**
+     * Get all the educations by Biography ID.
+     *
+     * @param biographyId the biography ID.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<EducationDTO> findAllByBiographyId(Long biographyId) {
+        LOG.debug("Request to get all Educations by Biography ID : {}", biographyId);
+        return educationRepository.findAllByBiographyId(biographyId).stream().map(educationMapper::toDto).collect(Collectors.toList());
     }
 
     /**

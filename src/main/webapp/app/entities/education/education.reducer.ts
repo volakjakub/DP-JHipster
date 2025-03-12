@@ -27,6 +27,15 @@ export const getEntities = createAsyncThunk(
   { serializeError: serializeAxiosError },
 );
 
+export const getEducationEntitiesByBiographyId = createAsyncThunk(
+  'education/fetch_entity_list_by_biography_id',
+  async (id: string | number) => {
+    const requestUrl = `${apiUrl}/biography?biographyId=${id}`;
+    return axios.get<IEducation[]>(requestUrl);
+  },
+  { serializeError: serializeAxiosError },
+);
+
 export const getEntity = createAsyncThunk(
   'education/fetch_entity',
   async (id: string | number) => {
@@ -87,6 +96,10 @@ export const EducationSlice = createEntitySlice({
       .addCase(getEntity.fulfilled, (state, action) => {
         state.loading = false;
         state.entity = action.payload.data;
+      })
+      .addCase(getEducationEntitiesByBiographyId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.entities = action.payload.data;
       })
       .addCase(deleteEntity.fulfilled, state => {
         state.updating = false;
