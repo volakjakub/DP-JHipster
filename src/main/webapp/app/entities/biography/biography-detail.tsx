@@ -8,7 +8,8 @@ import { APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './biography.reducer';
-import { getEntitiesByBiographyId } from 'app/entities/language/language.reducer';
+import { getLanguageEntitiesByBiographyId } from 'app/entities/language/language.reducer';
+import { getEducationEntitiesByBiographyId } from 'app/entities/education/education.reducer';
 
 export const BiographyDetail = () => {
   const dispatch = useAppDispatch();
@@ -17,12 +18,15 @@ export const BiographyDetail = () => {
 
   useEffect(() => {
     dispatch(getEntity(id));
-    dispatch(getEntitiesByBiographyId(id));
+    dispatch(getLanguageEntitiesByBiographyId(id));
+    dispatch(getEducationEntitiesByBiographyId(id));
   }, []);
 
   const biographyEntity = useAppSelector(state => state.biography.entity);
   const languageList = useAppSelector(state => state.language.entities);
   const languageLoading = useAppSelector(state => state.language.loading);
+  const educationList = useAppSelector(state => state.education.entities);
+  const educationLoading = useAppSelector(state => state.education.loading);
   return (
     <Row>
       <Col md="6">
@@ -99,7 +103,7 @@ export const BiographyDetail = () => {
         <h2 data-cy="biographyDetailsHeading">Jazyky</h2>
         <Link to="/language/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
           <FontAwesomeIcon icon="plus" />
-          &nbsp; Vytvořit Jazyk
+          &nbsp; Přidat Jazyk
         </Link>
         <br />
         <br />
@@ -123,7 +127,7 @@ export const BiographyDetail = () => {
                     <td className="text-end">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`/language/${language.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit Jazyk</span>
+                          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit jazyk</span>
                         </Button>
                         <Button
                           onClick={() => (window.location.href = `/language/${language.id}/delete`)}
@@ -131,7 +135,7 @@ export const BiographyDetail = () => {
                           size="sm"
                           data-cy="entityDeleteButton"
                         >
-                          <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit Jazyk</span>
+                          <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit jazyk</span>
                         </Button>
                       </div>
                     </td>
@@ -141,6 +145,58 @@ export const BiographyDetail = () => {
             </Table>
           ) : (
             <div className="alert alert-warning">Žádné jazyk</div>
+          )}
+        </div>
+
+        <h2 data-cy="biographyDetailsHeading">Vzdělání</h2>
+        <Link to="/education/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+          <FontAwesomeIcon icon="plus" />
+          &nbsp; Přidat Vzdělání
+        </Link>
+        <br />
+        <br />
+        <div className="table-responsive">
+          {educationLoading ? (
+            <div className="alert alert-warning">Načítání</div>
+          ) : educationList && educationList.length > 0 ? (
+            <Table responsive>
+              <thead>
+                <tr>
+                  <th className="hand">Škola</th>
+                  <th className="hand">Typ</th>
+                  <th className="hand">Počátek studia</th>
+                  <th className="hand">Ukončení studia</th>
+                  <th />
+                </tr>
+              </thead>
+              <tbody>
+                {educationList.map((education, i) => (
+                  <tr key={`education-${i}`} data-cy="entityTable">
+                    <td>{education.school}</td>
+                    <td>{education.type}</td>
+                    <td>{education.start ? <TextFormat value={education.start} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
+                    <td>{education.end ? <TextFormat value={education.end} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
+                    <td className="text-end">
+                      <div className="btn-group flex-btn-group-container">
+                        <Button tag={Link} to={`/education/${education.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit vzdělání</span>
+                        </Button>
+                        <Button
+                          onClick={() => (window.location.href = `/education/${education.id}/delete`)}
+                          color="danger"
+                          size="sm"
+                          data-cy="entityDeleteButton"
+                        >
+                          <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit vzdělání</span>
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          ) : (
+            <div className="alert alert-warning">Žádné vzdělání</div>
           )}
         </div>
       </Col>

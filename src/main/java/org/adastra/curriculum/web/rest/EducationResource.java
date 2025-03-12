@@ -150,6 +150,21 @@ public class EducationResource {
     }
 
     /**
+     * {@code GET  /educations} : get all the educations by Biography ID.
+     *
+     * @param biographyId the biography ID.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of educations in body.
+     */
+    @GetMapping("/biography")
+    public ResponseEntity<List<EducationDTO>> getAllEducationsByBiographyId(
+        @RequestParam(name = "biographyId", required = true) Long biographyId
+    ) {
+        LOG.debug("REST request to get a Educations by Biography ID : {}", biographyId);
+        List<EducationDTO> educationDTOS = educationService.findAllByBiographyId(biographyId);
+        return ResponseEntity.ok().body(educationDTOS);
+    }
+
+    /**
      * {@code GET  /educations/:id} : get the "id" education.
      *
      * @param id the id of the educationDTO to retrieve.
