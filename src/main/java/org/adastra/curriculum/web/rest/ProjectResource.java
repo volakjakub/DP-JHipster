@@ -159,6 +159,21 @@ public class ProjectResource {
     }
 
     /**
+     * {@code GET  /projects} : get all the projects by Biography ID.
+     *
+     * @param biographyId the biography ID.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in body.
+     */
+    @GetMapping("/biography")
+    public ResponseEntity<List<ProjectDTO>> getAllProjectsByBiographyId(
+        @RequestParam(name = "biographyId", required = true) Long biographyId
+    ) {
+        LOG.debug("REST request to get a Projects by Biography ID : {}", biographyId);
+        List<ProjectDTO> projectDTOS = projectService.findAllByBiographyId(biographyId);
+        return ResponseEntity.ok().body(projectDTOS);
+    }
+
+    /**
      * {@code GET  /projects/:id} : get the "id" project.
      *
      * @param id the id of the projectDTO to retrieve.

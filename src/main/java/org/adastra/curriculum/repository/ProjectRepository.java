@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.adastra.curriculum.domain.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -27,4 +27,6 @@ public interface ProjectRepository extends ProjectRepositoryWithBagRelationships
     default Page<Project> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
+
+    List<Project> findAllByBiographyId(Long biographyId);
 }
