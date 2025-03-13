@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getBiographyEntityByUsername } from 'app/entities/biography/biography.reducer';
 import { LanguageName } from 'app/shared/model/enumerations/language-name.model';
 import { createEntity, getEntity, reset, updateEntity } from './language.reducer';
 
@@ -18,7 +17,6 @@ export const LanguageUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const account = useAppSelector(state => state.authentication.account);
   const biography = useAppSelector(state => state.biography.entity);
   const languageEntity = useAppSelector(state => state.language.entity);
   const loading = useAppSelector(state => state.language.loading);
@@ -35,10 +33,6 @@ export const LanguageUpdate = () => {
       dispatch(reset());
     } else {
       dispatch(getEntity(id));
-    }
-
-    if (account?.login) {
-      dispatch(getBiographyEntityByUsername(account.login));
     }
   }, []);
 
@@ -59,7 +53,7 @@ export const LanguageUpdate = () => {
     const entity = {
       ...languageEntity,
       ...values,
-      biography: biography,
+      biography,
     };
 
     if (isNew) {
@@ -75,7 +69,7 @@ export const LanguageUpdate = () => {
       : {
           name: 'CZECH',
           ...languageEntity,
-          biography: biography,
+          biography,
         };
 
   return (

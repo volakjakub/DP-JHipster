@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getEntities as getBiographies } from 'app/entities/biography/biography.reducer';
 import { EducationType } from 'app/shared/model/enumerations/education-type.model';
 import { createEntity, getEntity, reset, updateEntity } from './education.reducer';
 
@@ -18,7 +17,7 @@ export const EducationUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const biographies = useAppSelector(state => state.biography.entities);
+  const biography = useAppSelector(state => state.biography.entity);
   const educationEntity = useAppSelector(state => state.education.entity);
   const loading = useAppSelector(state => state.education.loading);
   const updating = useAppSelector(state => state.education.updating);
@@ -26,7 +25,7 @@ export const EducationUpdate = () => {
   const educationTypeValues = Object.keys(EducationType);
 
   const handleClose = () => {
-    navigate(`/education${location.search}`);
+    navigate(`/biography/${biography?.id}`);
   };
 
   useEffect(() => {
@@ -35,8 +34,6 @@ export const EducationUpdate = () => {
     } else {
       dispatch(getEntity(id));
     }
-
-    dispatch(getBiographies({}));
   }, []);
 
   useEffect(() => {
@@ -53,7 +50,7 @@ export const EducationUpdate = () => {
     const entity = {
       ...educationEntity,
       ...values,
-      biography: biographies.find(it => it.id.toString() === values.biography?.toString()),
+      biography,
     };
 
     if (isNew) {
@@ -69,7 +66,7 @@ export const EducationUpdate = () => {
       : {
           type: 'HIGH_SCHOOL',
           ...educationEntity,
-          biography: educationEntity?.biography?.id,
+          biography,
         };
 
   return (
@@ -77,19 +74,21 @@ export const EducationUpdate = () => {
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="curriculumApp.education.home.createOrEditLabel" data-cy="EducationCreateUpdateHeading">
-            Vytvořit nebo upravit Education
+            Vytvořit nebo upravit Vzdělání
           </h2>
         </Col>
       </Row>
       <Row className="justify-content-center">
         <Col md="8">
           {loading ? (
-            <p>Loading...</p>
+            <p>Načítání...</p>
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? <ValidatedField name="id" required readOnly id="education-id" label="ID" validate={{ required: true }} /> : null}
+              {!isNew ? (
+                <ValidatedField name="id" required readOnly id="education-id" label="ID" validate={{ required: true }} hidden={true} />
+              ) : null}
               <ValidatedField
-                label="School"
+                label="Škola"
                 id="education-school"
                 name="school"
                 data-cy="school"
@@ -99,7 +98,7 @@ export const EducationUpdate = () => {
                   maxLength: { value: 50, message: 'Toto pole nemůže být delší než 50 znaků.' },
                 }}
               />
-              <ValidatedField label="Type" id="education-type" name="type" data-cy="type" type="select">
+              <ValidatedField label="Typ" id="education-type" name="type" data-cy="type" type="select">
                 {educationTypeValues.map(educationType => (
                   <option value={educationType} key={educationType}>
                     {educationType}
@@ -107,7 +106,7 @@ export const EducationUpdate = () => {
                 ))}
               </ValidatedField>
               <ValidatedField
-                label="Start"
+                label="Počátek studia"
                 id="education-start"
                 name="start"
                 data-cy="start"
@@ -116,18 +115,15 @@ export const EducationUpdate = () => {
                   required: { value: true, message: 'Toto pole je povinné.' },
                 }}
               />
-              <ValidatedField label="End" id="education-end" name="end" data-cy="end" type="date" />
-              <ValidatedField id="education-biography" name="biography" data-cy="biography" label="Biography" type="select">
-                <option value="" key="0" />
-                {biographies
-                  ? biographies.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/education" replace color="info">
+              <ValidatedField label="Ukončení studia" id="education-end" name="end" data-cy="end" type="date" />
+              <Button
+                tag={Link}
+                id="cancel-save"
+                data-cy="entityCreateCancelButton"
+                to={`/biography/${biography?.id}`}
+                replace
+                color="info"
+              >
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">Zpět</span>

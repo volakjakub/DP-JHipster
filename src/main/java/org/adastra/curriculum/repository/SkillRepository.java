@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface SkillRepository extends JpaRepository<Skill, Long> {
-    List<Skill> findAllByBiographyId(Long biographyId);
+    List<Skill> findAllByBiographyIdOrderByNameAsc(Long biographyId);
 }

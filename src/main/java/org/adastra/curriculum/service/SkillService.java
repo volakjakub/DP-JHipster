@@ -99,7 +99,11 @@ public class SkillService {
     @Transactional(readOnly = true)
     public List<SkillDTO> findAllByBiographyId(Long biographyId) {
         LOG.debug("Request to get all Skills by Biography ID : {}", biographyId);
-        return skillRepository.findAllByBiographyId(biographyId).stream().map(skillMapper::toDto).collect(Collectors.toList());
+        return skillRepository
+            .findAllByBiographyIdOrderByNameAsc(biographyId)
+            .stream()
+            .map(skillMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     /**
