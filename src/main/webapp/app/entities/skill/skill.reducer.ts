@@ -3,6 +3,7 @@ import { createAsyncThunk, isFulfilled, isPending } from '@reduxjs/toolkit';
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { EntityState, IQueryParams, createEntitySlice, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { ISkill, defaultValue } from 'app/shared/model/skill.model';
+import { IProject } from 'app/shared/model/project.model';
 
 const initialState: EntityState<ISkill> = {
   loading: false,
@@ -23,6 +24,15 @@ export const getEntities = createAsyncThunk(
   async ({ page, size, sort }: IQueryParams) => {
     const requestUrl = `${apiUrl}?${sort ? `page=${page}&size=${size}&sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
     return axios.get<ISkill[]>(requestUrl);
+  },
+  { serializeError: serializeAxiosError },
+);
+
+export const getSkillEntitiesByBiographyId = createAsyncThunk(
+  'skill/fetch_entity_list_by_biography_id',
+  async (id: string | number) => {
+    const requestUrl = `${apiUrl}/biography?biographyId=${id}`;
+    return axios.get<IProject[]>(requestUrl);
   },
   { serializeError: serializeAxiosError },
 );
@@ -87,6 +97,10 @@ export const SkillSlice = createEntitySlice({
       .addCase(getEntity.fulfilled, (state, action) => {
         state.loading = false;
         state.entity = action.payload.data;
+      })
+      .addCase(getSkillEntitiesByBiographyId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.entities = action.payload.data;
       })
       .addCase(deleteEntity.fulfilled, state => {
         state.updating = false;

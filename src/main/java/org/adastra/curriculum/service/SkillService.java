@@ -1,6 +1,8 @@
 package org.adastra.curriculum.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.adastra.curriculum.domain.Skill;
 import org.adastra.curriculum.repository.SkillRepository;
 import org.adastra.curriculum.service.dto.SkillDTO;
@@ -86,6 +88,18 @@ public class SkillService {
     public Page<SkillDTO> findAll(Pageable pageable) {
         LOG.debug("Request to get all Skills");
         return skillRepository.findAll(pageable).map(skillMapper::toDto);
+    }
+
+    /**
+     * Get all the skills by Biography ID.
+     *
+     * @param biographyId the biography ID.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<SkillDTO> findAllByBiographyId(Long biographyId) {
+        LOG.debug("Request to get all Skills by Biography ID : {}", biographyId);
+        return skillRepository.findAllByBiographyId(biographyId).stream().map(skillMapper::toDto).collect(Collectors.toList());
     }
 
     /**

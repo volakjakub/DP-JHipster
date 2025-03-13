@@ -150,6 +150,21 @@ public class SkillResource {
     }
 
     /**
+     * {@code GET  /skills} : get all the skills by Biography ID.
+     *
+     * @param biographyId the biography ID.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of skills in body.
+     */
+    @GetMapping("/biography")
+    public ResponseEntity<List<SkillDTO>> getAllProjectsByBiographyId(
+        @RequestParam(name = "biographyId", required = true) Long biographyId
+    ) {
+        LOG.debug("REST request to get a Skills by Biography ID : {}", biographyId);
+        List<SkillDTO> skillDTOS = skillService.findAllByBiographyId(biographyId);
+        return ResponseEntity.ok().body(skillDTOS);
+    }
+
+    /**
      * {@code GET  /skills/:id} : get the "id" skill.
      *
      * @param id the id of the skillDTO to retrieve.
