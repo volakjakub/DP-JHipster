@@ -7,8 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { getEntities as getBiographies } from 'app/entities/biography/biography.reducer';
-import { getEntities as getSkills } from 'app/entities/skill/skill.reducer';
+import { getSkillEntitiesByBiographyId } from 'app/entities/skill/skill.reducer';
 import { createEntity, getEntity, reset, updateEntity } from './project.reducer';
 
 export const ProjectUpdate = () => {
@@ -19,7 +18,7 @@ export const ProjectUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const biographies = useAppSelector(state => state.biography.entities);
+  const biography = useAppSelector(state => state.biography.entity);
   const skills = useAppSelector(state => state.skill.entities);
   const projectEntity = useAppSelector(state => state.project.entity);
   const loading = useAppSelector(state => state.project.loading);
@@ -27,7 +26,7 @@ export const ProjectUpdate = () => {
   const updateSuccess = useAppSelector(state => state.project.updateSuccess);
 
   const handleClose = () => {
-    navigate(`/project${location.search}`);
+    navigate(`/biography/${biography?.id}`);
   };
 
   useEffect(() => {
@@ -37,8 +36,7 @@ export const ProjectUpdate = () => {
       dispatch(getEntity(id));
     }
 
-    dispatch(getBiographies({}));
-    dispatch(getSkills({}));
+    dispatch(getSkillEntitiesByBiographyId(biography?.id));
   }, []);
 
   useEffect(() => {
@@ -55,7 +53,7 @@ export const ProjectUpdate = () => {
     const entity = {
       ...projectEntity,
       ...values,
-      biography: biographies.find(it => it.id.toString() === values.biography?.toString()),
+      biography,
       skills: mapIdList(values.skills),
     };
 
@@ -71,7 +69,7 @@ export const ProjectUpdate = () => {
       ? {}
       : {
           ...projectEntity,
-          biography: projectEntity?.biography?.id,
+          biography,
           skills: projectEntity?.skills?.map(e => e.id.toString()),
         };
 
@@ -80,19 +78,21 @@ export const ProjectUpdate = () => {
       <Row className="justify-content-center">
         <Col md="8">
           <h2 id="curriculumApp.project.home.createOrEditLabel" data-cy="ProjectCreateUpdateHeading">
-            Vytvořit nebo upravit Project
+            Vytvořit nebo upravit Projekt
           </h2>
         </Col>
       </Row>
       <Row className="justify-content-center">
         <Col md="8">
           {loading ? (
-            <p>Loading...</p>
+            <p>Načítání...</p>
           ) : (
             <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
-              {!isNew ? <ValidatedField name="id" required readOnly id="project-id" label="ID" validate={{ required: true }} /> : null}
+              {!isNew ? (
+                <ValidatedField name="id" required readOnly id="project-id" label="ID" validate={{ required: true }} hidden={true} />
+              ) : null}
               <ValidatedField
-                label="Name"
+                label="Název"
                 id="project-name"
                 name="name"
                 data-cy="name"
@@ -103,7 +103,7 @@ export const ProjectUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Client"
+                label="Klient"
                 id="project-client"
                 name="client"
                 data-cy="client"
@@ -114,7 +114,7 @@ export const ProjectUpdate = () => {
                 }}
               />
               <ValidatedField
-                label="Start"
+                label="Zahájení projektu"
                 id="project-start"
                 name="start"
                 data-cy="start"
@@ -123,18 +123,8 @@ export const ProjectUpdate = () => {
                   required: { value: true, message: 'Toto pole je povinné.' },
                 }}
               />
-              <ValidatedField label="End" id="project-end" name="end" data-cy="end" type="date" />
-              <ValidatedField label="Description" id="project-description" name="description" data-cy="description" type="text" />
-              <ValidatedField id="project-biography" name="biography" data-cy="biography" label="Biography" type="select">
-                <option value="" key="0" />
-                {biographies
-                  ? biographies.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
+              <ValidatedField label="Ukončení projektu" id="project-end" name="end" data-cy="end" type="date" />
+              <ValidatedField label="Popis" id="project-description" name="description" data-cy="description" type="text" />
               <ValidatedField label="Skills" id="project-skills" data-cy="skills" type="select" multiple name="skills">
                 <option value="" key="0" />
                 {skills
@@ -145,7 +135,14 @@ export const ProjectUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/project" replace color="info">
+              <Button
+                tag={Link}
+                id="cancel-save"
+                data-cy="entityCreateCancelButton"
+                to={`/biography/${biography?.id}`}
+                replace
+                color="info"
+              >
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">Zpět</span>
