@@ -1,6 +1,8 @@
 package org.adastra.curriculum.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.adastra.curriculum.domain.Project;
 import org.adastra.curriculum.repository.ProjectRepository;
 import org.adastra.curriculum.service.dto.ProjectDTO;
@@ -107,6 +109,18 @@ public class ProjectService {
     public Optional<ProjectDTO> findOne(Long id) {
         LOG.debug("Request to get Project : {}", id);
         return projectRepository.findOneWithEagerRelationships(id).map(projectMapper::toDto);
+    }
+
+    /**
+     * Get all the projects by Biography ID.
+     *
+     * @param biographyId the biography ID.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<ProjectDTO> findAllByBiographyId(Long biographyId) {
+        LOG.debug("Request to get all Projects by Biography ID : {}", biographyId);
+        return projectRepository.findAllByBiographyId(biographyId).stream().map(projectMapper::toDto).collect(Collectors.toList());
     }
 
     /**
