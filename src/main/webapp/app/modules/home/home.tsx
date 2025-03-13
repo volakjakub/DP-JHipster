@@ -7,7 +7,7 @@ import { Alert, Button, Col, Row } from 'reactstrap';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { getEntityByUsername } from 'app/entities/biography/biography.reducer';
+import { getBiographyEntityByUsername } from 'app/entities/biography/biography.reducer';
 
 export const Home = () => {
   const dispatch = useAppDispatch();
@@ -15,7 +15,7 @@ export const Home = () => {
 
   useEffect(() => {
     if (account?.login) {
-      dispatch(getEntityByUsername(account.login));
+      dispatch(getBiographyEntityByUsername(account.login));
     }
   }, []);
 
