@@ -36,7 +36,7 @@ export const getEntity = createAsyncThunk(
   { serializeError: serializeAxiosError },
 );
 
-export const getEntityByUsername = createAsyncThunk(
+export const getBiographyEntityByUsername = createAsyncThunk(
   'biography/fetch_entity_by_username',
   async (id: string | number, { rejectWithValue }) => {
     try {
@@ -104,7 +104,7 @@ export const BiographySlice = createEntitySlice({
         state.loading = false;
         state.entity = action.payload.data;
       })
-      .addCase(getEntityByUsername.fulfilled, (state, action) => {
+      .addCase(getBiographyEntityByUsername.fulfilled, (state, action) => {
         state.loading = false;
         state.entity = action.payload?.data;
       })
