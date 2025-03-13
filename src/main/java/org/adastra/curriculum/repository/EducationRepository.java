@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface EducationRepository extends JpaRepository<Education, Long> {
-    List<Education> findAllByBiographyId(Long biographyId);
+    List<Education> findAllByBiographyIdOrderByStartAsc(Long biographyId);
 }

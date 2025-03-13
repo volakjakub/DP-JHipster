@@ -28,5 +28,5 @@ public interface ProjectRepository extends ProjectRepositoryWithBagRelationships
         return this.fetchBagRelationships(this.findAll(pageable));
     }
 
-    List<Project> findAllByBiographyId(Long biographyId);
+    List<Project> findAllByBiographyIdOrderByStartAsc(Long biographyId);
 }

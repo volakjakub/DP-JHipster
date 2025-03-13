@@ -120,7 +120,11 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public List<ProjectDTO> findAllByBiographyId(Long biographyId) {
         LOG.debug("Request to get all Projects by Biography ID : {}", biographyId);
-        return projectRepository.findAllByBiographyId(biographyId).stream().map(projectMapper::toDto).collect(Collectors.toList());
+        return projectRepository
+            .findAllByBiographyIdOrderByStartAsc(biographyId)
+            .stream()
+            .map(projectMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     /**

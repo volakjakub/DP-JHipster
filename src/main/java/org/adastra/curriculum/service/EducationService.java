@@ -99,7 +99,11 @@ public class EducationService {
     @Transactional(readOnly = true)
     public List<EducationDTO> findAllByBiographyId(Long biographyId) {
         LOG.debug("Request to get all Educations by Biography ID : {}", biographyId);
-        return educationRepository.findAllByBiographyId(biographyId).stream().map(educationMapper::toDto).collect(Collectors.toList());
+        return educationRepository
+            .findAllByBiographyIdOrderByStartAsc(biographyId)
+            .stream()
+            .map(educationMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     /**

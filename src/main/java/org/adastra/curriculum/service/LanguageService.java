@@ -111,7 +111,11 @@ public class LanguageService {
     @Transactional(readOnly = true)
     public List<LanguageDTO> findAllByBiographyId(Long biographyId) {
         LOG.debug("Request to get all Languages by Biography ID : {}", biographyId);
-        return languageRepository.findAllByBiographyId(biographyId).stream().map(languageMapper::toDto).collect(Collectors.toList());
+        return languageRepository
+            .findAllByBiographyIdOrderByExpertiseDesc(biographyId)
+            .stream()
+            .map(languageMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     /**
