@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { deleteEntity, getEntity } from './language.reducer';
+import { getBiographyEntityByUsername } from 'app/entities/biography/biography.reducer';
 
 export const LanguageDeleteDialog = () => {
   const dispatch = useAppDispatch();
@@ -13,6 +14,7 @@ export const LanguageDeleteDialog = () => {
   const navigate = useNavigate();
   const { id } = useParams<'id'>();
 
+  const account = useAppSelector(state => state.authentication.account);
   const biography = useAppSelector(state => state.biography.entity);
 
   const [loadModal, setLoadModal] = useState(false);
@@ -20,6 +22,10 @@ export const LanguageDeleteDialog = () => {
   useEffect(() => {
     dispatch(getEntity(id));
     setLoadModal(true);
+
+    if (account?.login) {
+      dispatch(getBiographyEntityByUsername(account.login));
+    }
   }, []);
 
   const languageEntity = useAppSelector(state => state.language.entity);
