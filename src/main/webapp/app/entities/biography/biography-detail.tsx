@@ -11,6 +11,7 @@ import { getEntity } from './biography.reducer';
 import { getLanguageEntitiesByBiographyId } from 'app/entities/language/language.reducer';
 import { getEducationEntitiesByBiographyId } from 'app/entities/education/education.reducer';
 import { getProjectEntitiesByBiographyId } from 'app/entities/project/project.reducer';
+import { getSkillEntitiesByBiographyId } from 'app/entities/skill/skill.reducer';
 
 export const BiographyDetail = () => {
   const dispatch = useAppDispatch();
@@ -22,6 +23,7 @@ export const BiographyDetail = () => {
     dispatch(getLanguageEntitiesByBiographyId(id));
     dispatch(getEducationEntitiesByBiographyId(id));
     dispatch(getProjectEntitiesByBiographyId(id));
+    dispatch(getSkillEntitiesByBiographyId(id));
   }, []);
 
   const biographyEntity = useAppSelector(state => state.biography.entity);
@@ -31,6 +33,8 @@ export const BiographyDetail = () => {
   const educationLoading = useAppSelector(state => state.education.loading);
   const projectList = useAppSelector(state => state.project.entities);
   const projectLoading = useAppSelector(state => state.project.loading);
+  const skillList = useAppSelector(state => state.skill.entities);
+  const skillLoading = useAppSelector(state => state.skill.loading);
   return (
     <div>
       <Row>
@@ -204,6 +208,54 @@ export const BiographyDetail = () => {
               <div className="alert alert-warning">Žádné vzdělání</div>
             )}
           </div>
+
+          <h2 data-cy="biographyDetailsHeading">Dovednosti</h2>
+          <Link to="/skill/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+            <FontAwesomeIcon icon="plus" />
+            &nbsp; Přidat Dovednost
+          </Link>
+          <br />
+          <br />
+          <div className="table-responsive">
+            {skillLoading ? (
+              <div className="alert alert-warning">Načítání</div>
+            ) : skillList && skillList.length > 0 ? (
+              <Table responsive>
+                <thead>
+                  <tr>
+                    <th className="hand">Název</th>
+                    <th className="hand">Zkušenost</th>
+                    <th />
+                  </tr>
+                </thead>
+                <tbody>
+                  {skillList.map((skill, i) => (
+                    <tr key={`skill-${i}`} data-cy="entityTable">
+                      <td>{skill.name}</td>
+                      <td>{skill.expertise}</td>
+                      <td className="text-end">
+                        <div className="btn-group flex-btn-group-container">
+                          <Button tag={Link} to={`/skill/${skill.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                            <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit dovednost</span>
+                          </Button>
+                          <Button
+                            onClick={() => (window.location.href = `/skill/${skill.id}/delete`)}
+                            color="danger"
+                            size="sm"
+                            data-cy="entityDeleteButton"
+                          >
+                            <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit dovednost</span>
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <div className="alert alert-warning">Žádné dovednosti</div>
+            )}
+          </div>
         </Col>
       </Row>
       <br />
@@ -229,6 +281,7 @@ export const BiographyDetail = () => {
                     <th className="hand">Začátek projektu</th>
                     <th className="hand">Ukončení projektu</th>
                     <th className="hand">Popis</th>
+                    <th className="hand">Dovednosti</th>
                     <th />
                   </tr>
                 </thead>
@@ -239,6 +292,19 @@ export const BiographyDetail = () => {
                       <td>{project.client}</td>
                       <td>{project.start ? <TextFormat value={project.start} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
                       <td>{project.end ? <TextFormat value={project.end} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
+                      <td>{project.description}</td>
+                      <td>
+                        {project.skills && project.skills.length > 0 ? (
+                          project.skills.map((skill, j) => (
+                            <span key={`skill-${j}`}>
+                              {skill.name}
+                              {j < project.skills.length - 1 ? ', ' : ''}
+                            </span>
+                          ))
+                        ) : (
+                          <span>-</span>
+                        )}
+                      </td>
                       <td className="text-end">
                         <div className="btn-group flex-btn-group-container">
                           <Button tag={Link} to={`/project/${project.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
