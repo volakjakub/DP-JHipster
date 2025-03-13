@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { deleteEntity, getEntity } from './education.reducer';
+import { getBiographyEntityByUsername } from 'app/entities/biography/biography.reducer';
 
 export const EducationDeleteDialog = () => {
   const dispatch = useAppDispatch();
@@ -13,6 +14,7 @@ export const EducationDeleteDialog = () => {
   const navigate = useNavigate();
   const { id } = useParams<'id'>();
 
+  const account = useAppSelector(state => state.authentication.account);
   const biography = useAppSelector(state => state.biography.entity);
 
   const [loadModal, setLoadModal] = useState(false);
@@ -20,6 +22,10 @@ export const EducationDeleteDialog = () => {
   useEffect(() => {
     dispatch(getEntity(id));
     setLoadModal(true);
+
+    if (account?.login) {
+      dispatch(getBiographyEntityByUsername(account.login));
+    }
   }, []);
 
   const educationEntity = useAppSelector(state => state.education.entity);

@@ -238,14 +238,20 @@ export const BiographyDetail = () => {
                           <Button tag={Link} to={`/skill/${skill.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
                             <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit dovednost</span>
                           </Button>
-                          <Button
-                            onClick={() => (window.location.href = `/skill/${skill.id}/delete`)}
-                            color="danger"
-                            size="sm"
-                            data-cy="entityDeleteButton"
-                          >
-                            <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit dovednost</span>
-                          </Button>
+                          {skill.projects && skill.projects.length > 0 ? (
+                            <Button disabled={true} color="secondary" size="sm" data-cy="entityDeleteButton">
+                              <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit dovednost</span>
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={() => (window.location.href = `/skill/${skill.id}/delete`)}
+                              color="danger"
+                              size="sm"
+                              data-cy="entityDeleteButton"
+                            >
+                              <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit dovednost</span>
+                            </Button>
+                          )}
                         </div>
                       </td>
                     </tr>
