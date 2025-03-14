@@ -26,6 +26,7 @@ export const BiographyDetail = () => {
     dispatch(getSkillEntitiesByBiographyId(id));
   }, []);
 
+  const account = useAppSelector(state => state.authentication.account);
   const biographyEntity = useAppSelector(state => state.biography.entity);
   const languageList = useAppSelector(state => state.language.entities);
   const languageLoading = useAppSelector(state => state.language.loading);
@@ -104,16 +105,26 @@ export const BiographyDetail = () => {
             <dt>Uživatel</dt>
             <dd>{biographyEntity.user ? biographyEntity.user.login : ''}</dd>
           </dl>
-          <Button tag={Link} to={`/biography/${biographyEntity.id}/edit`} replace color="primary">
-            <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit životopis</span>
-          </Button>
+          {account && account?.login === biographyEntity.user?.login ? (
+            <Button tag={Link} to={`/biography/${biographyEntity.id}/edit`} replace color="primary">
+              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit životopis</span>
+            </Button>
+          ) : (
+            <Button tag={Link} to={`/biography/${biographyEntity.id}/edit`} replace color="secondary" disabled={true}>
+              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit životopis</span>
+            </Button>
+          )}
         </Col>
         <Col md="9">
           <h2 data-cy="biographyDetailsHeading">Jazyky</h2>
-          <Link to="/language/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp; Přidat Jazyk
-          </Link>
+          {account && account?.login === biographyEntity.user?.login ? (
+            <Link to="/language/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+              <FontAwesomeIcon icon="plus" />
+              &nbsp; Přidat Jazyk
+            </Link>
+          ) : (
+            <></>
+          )}
           <br />
           <br />
           <div className="table-responsive">
@@ -134,19 +145,43 @@ export const BiographyDetail = () => {
                       <td>{language.name}</td>
                       <td>{language.expertise}</td>
                       <td className="text-end">
-                        <div className="btn-group flex-btn-group-container">
-                          <Button tag={Link} to={`/language/${language.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                            <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit jazyk</span>
-                          </Button>
-                          <Button
-                            onClick={() => (window.location.href = `/language/${language.id}/delete`)}
-                            color="danger"
-                            size="sm"
-                            data-cy="entityDeleteButton"
-                          >
-                            <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit jazyk</span>
-                          </Button>
-                        </div>
+                        {account && account?.login === biographyEntity.user?.login ? (
+                          <div className="btn-group flex-btn-group-container">
+                            <Button tag={Link} to={`/language/${language.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit jazyk</span>
+                            </Button>
+                            <Button
+                              onClick={() => (window.location.href = `/language/${language.id}/delete`)}
+                              color="danger"
+                              size="sm"
+                              data-cy="entityDeleteButton"
+                            >
+                              <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit jazyk</span>
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="btn-group flex-btn-group-container">
+                            <Button
+                              tag={Link}
+                              to={`/language/${language.id}/edit`}
+                              color="secondary"
+                              size="sm"
+                              data-cy="entityEditButton"
+                              disabled={true}
+                            >
+                              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit jazyk</span>
+                            </Button>
+                            <Button
+                              onClick={() => (window.location.href = `/language/${language.id}/delete`)}
+                              color="secondary"
+                              size="sm"
+                              data-cy="entityDeleteButton"
+                              disabled={true}
+                            >
+                              <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit jazyk</span>
+                            </Button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -158,10 +193,14 @@ export const BiographyDetail = () => {
           </div>
 
           <h2 data-cy="biographyDetailsHeading">Vzdělání</h2>
-          <Link to="/education/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp; Přidat Vzdělání
-          </Link>
+          {account && account?.login === biographyEntity.user?.login ? (
+            <Link to="/education/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+              <FontAwesomeIcon icon="plus" />
+              &nbsp; Přidat Vzdělání
+            </Link>
+          ) : (
+            <></>
+          )}
           <br />
           <br />
           <div className="table-responsive">
@@ -186,19 +225,43 @@ export const BiographyDetail = () => {
                       <td>{education.start ? <TextFormat value={education.start} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
                       <td>{education.end ? <TextFormat value={education.end} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
                       <td className="text-end">
-                        <div className="btn-group flex-btn-group-container">
-                          <Button tag={Link} to={`/education/${education.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                            <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit vzdělání</span>
-                          </Button>
-                          <Button
-                            onClick={() => (window.location.href = `/education/${education.id}/delete`)}
-                            color="danger"
-                            size="sm"
-                            data-cy="entityDeleteButton"
-                          >
-                            <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit vzdělání</span>
-                          </Button>
-                        </div>
+                        {account && account?.login === biographyEntity.user?.login ? (
+                          <div className="btn-group flex-btn-group-container">
+                            <Button tag={Link} to={`/education/${education.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit vzdělání</span>
+                            </Button>
+                            <Button
+                              onClick={() => (window.location.href = `/education/${education.id}/delete`)}
+                              color="danger"
+                              size="sm"
+                              data-cy="entityDeleteButton"
+                            >
+                              <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit vzdělání</span>
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="btn-group flex-btn-group-container">
+                            <Button
+                              tag={Link}
+                              to={`/education/${education.id}/edit`}
+                              color="secondary"
+                              size="sm"
+                              data-cy="entityEditButton"
+                              disabled={true}
+                            >
+                              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit vzdělání</span>
+                            </Button>
+                            <Button
+                              onClick={() => (window.location.href = `/education/${education.id}/delete`)}
+                              color="secondary"
+                              size="sm"
+                              data-cy="entityDeleteButton"
+                              disabled={true}
+                            >
+                              <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit vzdělání</span>
+                            </Button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -210,10 +273,14 @@ export const BiographyDetail = () => {
           </div>
 
           <h2 data-cy="biographyDetailsHeading">Dovednosti</h2>
-          <Link to="/skill/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp; Přidat Dovednost
-          </Link>
+          {account && account?.login === biographyEntity.user?.login ? (
+            <Link to="/skill/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+              <FontAwesomeIcon icon="plus" />
+              &nbsp; Přidat Dovednost
+            </Link>
+          ) : (
+            <></>
+          )}
           <br />
           <br />
           <div className="table-responsive">
@@ -234,25 +301,43 @@ export const BiographyDetail = () => {
                       <td>{skill.name}</td>
                       <td>{skill.expertise}</td>
                       <td className="text-end">
-                        <div className="btn-group flex-btn-group-container">
-                          <Button tag={Link} to={`/skill/${skill.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                            <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit dovednost</span>
-                          </Button>
-                          {skill.projects && skill.projects.length > 0 ? (
+                        {account && account?.login === biographyEntity.user?.login ? (
+                          <div className="btn-group flex-btn-group-container">
+                            <Button tag={Link} to={`/skill/${skill.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit dovednost</span>
+                            </Button>
+                            {skill.projects && skill.projects.length > 0 ? (
+                              <Button disabled={true} color="secondary" size="sm" data-cy="entityDeleteButton">
+                                <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit dovednost</span>
+                              </Button>
+                            ) : (
+                              <Button
+                                onClick={() => (window.location.href = `/skill/${skill.id}/delete`)}
+                                color="danger"
+                                size="sm"
+                                data-cy="entityDeleteButton"
+                              >
+                                <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit dovednost</span>
+                              </Button>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="btn-group flex-btn-group-container">
+                            <Button
+                              tag={Link}
+                              to={`/skill/${skill.id}/edit`}
+                              color="secondary"
+                              size="sm"
+                              data-cy="entityEditButton"
+                              disabled={true}
+                            >
+                              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit dovednost</span>
+                            </Button>
                             <Button disabled={true} color="secondary" size="sm" data-cy="entityDeleteButton">
                               <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit dovednost</span>
                             </Button>
-                          ) : (
-                            <Button
-                              onClick={() => (window.location.href = `/skill/${skill.id}/delete`)}
-                              color="danger"
-                              size="sm"
-                              data-cy="entityDeleteButton"
-                            >
-                              <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit dovednost</span>
-                            </Button>
-                          )}
-                        </div>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -269,10 +354,14 @@ export const BiographyDetail = () => {
       <Row>
         <Col md="12">
           <h2 data-cy="biographyDetailsHeading">Projekty</h2>
-          <Link to="/project/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp; Přidat Projekt
-          </Link>
+          {account && account?.login === biographyEntity.user?.login ? (
+            <Link to="/project/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+              <FontAwesomeIcon icon="plus" />
+              &nbsp; Přidat Projekt
+            </Link>
+          ) : (
+            <></>
+          )}
           <br />
           <br />
           <div className="table-responsive">
@@ -312,19 +401,43 @@ export const BiographyDetail = () => {
                         )}
                       </td>
                       <td className="text-end">
-                        <div className="btn-group flex-btn-group-container">
-                          <Button tag={Link} to={`/project/${project.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
-                            <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit projekt</span>
-                          </Button>
-                          <Button
-                            onClick={() => (window.location.href = `/project/${project.id}/delete`)}
-                            color="danger"
-                            size="sm"
-                            data-cy="entityDeleteButton"
-                          >
-                            <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit projekt</span>
-                          </Button>
-                        </div>
+                        {account && account?.login === biographyEntity.user?.login ? (
+                          <div className="btn-group flex-btn-group-container">
+                            <Button tag={Link} to={`/project/${project.id}/edit`} color="primary" size="sm" data-cy="entityEditButton">
+                              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit projekt</span>
+                            </Button>
+                            <Button
+                              onClick={() => (window.location.href = `/project/${project.id}/delete`)}
+                              color="danger"
+                              size="sm"
+                              data-cy="entityDeleteButton"
+                            >
+                              <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit projekt</span>
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="btn-group flex-btn-group-container">
+                            <Button
+                              tag={Link}
+                              to={`/project/${project.id}/edit`}
+                              color="secondary"
+                              size="sm"
+                              data-cy="entityEditButton"
+                              disabled={true}
+                            >
+                              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit projekt</span>
+                            </Button>
+                            <Button
+                              onClick={() => (window.location.href = `/project/${project.id}/delete`)}
+                              color="secondary"
+                              size="sm"
+                              data-cy="entityDeleteButton"
+                              disabled={true}
+                            >
+                              <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit projekt</span>
+                            </Button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))}

@@ -6,19 +6,19 @@ const EntitiesMenu = () => {
     <>
       {/* prettier-ignore */}
       <MenuItem icon="asterisk" to="/biography">
-        Biography
+        Životopisy
       </MenuItem>
       <MenuItem icon="asterisk" to="/education">
-        Education
+        Vzdělání
       </MenuItem>
       <MenuItem icon="asterisk" to="/language">
-        Language
+        Jazyky
       </MenuItem>
       <MenuItem icon="asterisk" to="/skill">
-        Skill
+        Dovednosti
       </MenuItem>
       <MenuItem icon="asterisk" to="/project">
-        Project
+        Projekty
       </MenuItem>
       {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
     </>

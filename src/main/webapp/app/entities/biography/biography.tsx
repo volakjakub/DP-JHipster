@@ -92,15 +92,11 @@ export const Biography = () => {
   return (
     <div>
       <h2 id="biography-heading" data-cy="BiographyHeading">
-        Biographies
+        Životopisy
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
             <FontAwesomeIcon icon="sync" spin={loading} /> Obnovit
           </Button>
-          <Link to="/biography/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp; Vytvořit Životopis
-          </Link>
         </div>
       </h2>
       <div className="table-responsive">
@@ -112,40 +108,40 @@ export const Biography = () => {
                   ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                 </th>
                 <th className="hand" onClick={sort('firstName')}>
-                  First Name <FontAwesomeIcon icon={getSortIconByFieldName('firstName')} />
+                  Křestní jméno <FontAwesomeIcon icon={getSortIconByFieldName('firstName')} />
                 </th>
                 <th className="hand" onClick={sort('lastName')}>
-                  Last Name <FontAwesomeIcon icon={getSortIconByFieldName('lastName')} />
+                  Přijmení <FontAwesomeIcon icon={getSortIconByFieldName('lastName')} />
                 </th>
                 <th className="hand" onClick={sort('title')}>
-                  Title <FontAwesomeIcon icon={getSortIconByFieldName('title')} />
+                  Titul <FontAwesomeIcon icon={getSortIconByFieldName('title')} />
                 </th>
                 <th className="hand" onClick={sort('phone')}>
-                  Phone <FontAwesomeIcon icon={getSortIconByFieldName('phone')} />
+                  Telefon <FontAwesomeIcon icon={getSortIconByFieldName('phone')} />
                 </th>
                 <th className="hand" onClick={sort('email')}>
-                  Email <FontAwesomeIcon icon={getSortIconByFieldName('email')} />
+                  E-mail <FontAwesomeIcon icon={getSortIconByFieldName('email')} />
                 </th>
                 <th className="hand" onClick={sort('street')}>
-                  Street <FontAwesomeIcon icon={getSortIconByFieldName('street')} />
+                  Ulice <FontAwesomeIcon icon={getSortIconByFieldName('street')} />
                 </th>
                 <th className="hand" onClick={sort('city')}>
-                  City <FontAwesomeIcon icon={getSortIconByFieldName('city')} />
+                  Město <FontAwesomeIcon icon={getSortIconByFieldName('city')} />
                 </th>
                 <th className="hand" onClick={sort('country')}>
-                  Country <FontAwesomeIcon icon={getSortIconByFieldName('country')} />
+                  Země <FontAwesomeIcon icon={getSortIconByFieldName('country')} />
                 </th>
                 <th className="hand" onClick={sort('position')}>
-                  Position <FontAwesomeIcon icon={getSortIconByFieldName('position')} />
+                  Pozice <FontAwesomeIcon icon={getSortIconByFieldName('position')} />
                 </th>
                 <th className="hand" onClick={sort('employedFrom')}>
-                  Employed From <FontAwesomeIcon icon={getSortIconByFieldName('employedFrom')} />
+                  Zaměsnán/a od <FontAwesomeIcon icon={getSortIconByFieldName('employedFrom')} />
                 </th>
                 <th className="hand" onClick={sort('image')}>
-                  Image <FontAwesomeIcon icon={getSortIconByFieldName('image')} />
+                  Fotografie <FontAwesomeIcon icon={getSortIconByFieldName('image')} />
                 </th>
                 <th>
-                  User <FontAwesomeIcon icon="sort" />
+                  Uživatel <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -196,9 +192,10 @@ export const Biography = () => {
                       <Button
                         tag={Link}
                         to={`/biography/${biography.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                        color="primary"
+                        color="secondary"
                         size="sm"
                         data-cy="entityEditButton"
+                        disabled={true}
                       >
                         <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
                       </Button>
@@ -206,9 +203,10 @@ export const Biography = () => {
                         onClick={() =>
                           (window.location.href = `/biography/${biography.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`)
                         }
-                        color="danger"
+                        color="secondary"
                         size="sm"
                         data-cy="entityDeleteButton"
+                        disabled={true}
                       >
                         <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit</span>
                       </Button>
