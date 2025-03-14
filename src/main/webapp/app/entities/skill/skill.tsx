@@ -91,15 +91,11 @@ export const Skill = () => {
   return (
     <div>
       <h2 id="skill-heading" data-cy="SkillHeading">
-        Skills
+        Dovednosti
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
             <FontAwesomeIcon icon="sync" spin={loading} /> Refresh list
           </Button>
-          <Link to="/skill/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp; Vytvořit Skill
-          </Link>
         </div>
       </h2>
       <div className="table-responsive">
@@ -111,13 +107,13 @@ export const Skill = () => {
                   ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                 </th>
                 <th className="hand" onClick={sort('name')}>
-                  Name <FontAwesomeIcon icon={getSortIconByFieldName('name')} />
+                  Název <FontAwesomeIcon icon={getSortIconByFieldName('name')} />
                 </th>
                 <th className="hand" onClick={sort('expertise')}>
-                  Expertise <FontAwesomeIcon icon={getSortIconByFieldName('expertise')} />
+                  Zkušenost <FontAwesomeIcon icon={getSortIconByFieldName('expertise')} />
                 </th>
                 <th>
-                  Biography <FontAwesomeIcon icon="sort" />
+                  Životopis <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -141,9 +137,10 @@ export const Skill = () => {
                       <Button
                         tag={Link}
                         to={`/skill/${skill.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                        color="primary"
+                        color="secondary"
                         size="sm"
                         data-cy="entityEditButton"
+                        disabled={true}
                       >
                         <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
                       </Button>
@@ -151,9 +148,10 @@ export const Skill = () => {
                         onClick={() =>
                           (window.location.href = `/skill/${skill.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`)
                         }
-                        color="danger"
+                        color="secondary"
                         size="sm"
                         data-cy="entityDeleteButton"
+                        disabled={true}
                       >
                         <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit</span>
                       </Button>

@@ -1,8 +1,11 @@
 package org.adastra.curriculum.service;
 
+import static org.adastra.curriculum.security.SecurityUtils.getCurrentUserLogin;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.adastra.curriculum.domain.Language;
 import org.adastra.curriculum.domain.Skill;
 import org.adastra.curriculum.repository.SkillRepository;
 import org.adastra.curriculum.service.dto.SkillDTO;
@@ -40,6 +43,19 @@ public class SkillService {
      */
     public SkillDTO save(SkillDTO skillDTO) {
         LOG.debug("Request to save Skill : {}", skillDTO);
+        Optional<String> login = getCurrentUserLogin();
+        if (login.isEmpty()) {
+            throw new RuntimeException("User not logged in!");
+        }
+        if (!skillDTO.getBiography().getUser().getLogin().equals(login.get())) {
+            throw new RuntimeException("Cannot create Skill for different Biography!");
+        }
+
+        Optional<Skill> skillOptional = skillRepository.findOneByNameAndBiographyId(skillDTO.getName(), skillDTO.getBiography().getId());
+        if (skillOptional.isPresent()) {
+            throw new RuntimeException("Skill already exists!");
+        }
+
         Skill skill = skillMapper.toEntity(skillDTO);
         skill = skillRepository.save(skill);
         return skillMapper.toDto(skill);
@@ -53,9 +69,21 @@ public class SkillService {
      */
     public SkillDTO update(SkillDTO skillDTO) {
         LOG.debug("Request to update Skill : {}", skillDTO);
-        Skill skill = skillMapper.toEntity(skillDTO);
-        skill = skillRepository.save(skill);
-        return skillMapper.toDto(skill);
+        if (canManipulate(skillDTO.getId())) {
+            Optional<Skill> skillOptional = skillRepository.findOneByNameAndBiographyId(
+                skillDTO.getName(),
+                skillDTO.getBiography().getId()
+            );
+            if (skillOptional.isPresent()) {
+                throw new RuntimeException("Skill already exists!");
+            }
+
+            Skill skill = skillMapper.toEntity(skillDTO);
+            skill = skillRepository.save(skill);
+            return skillMapper.toDto(skill);
+        } else {
+            throw new RuntimeException("Skill not assigned to biography owned by user!");
+        }
     }
 
     /**
@@ -66,16 +94,18 @@ public class SkillService {
      */
     public Optional<SkillDTO> partialUpdate(SkillDTO skillDTO) {
         LOG.debug("Request to partially update Skill : {}", skillDTO);
+        if (canManipulate(skillDTO.getId())) {
+            return skillRepository
+                .findById(skillDTO.getId())
+                .map(existingSkill -> {
+                    skillMapper.partialUpdate(existingSkill, skillDTO);
 
-        return skillRepository
-            .findById(skillDTO.getId())
-            .map(existingSkill -> {
-                skillMapper.partialUpdate(existingSkill, skillDTO);
-
-                return existingSkill;
-            })
-            .map(skillRepository::save)
-            .map(skillMapper::toDto);
+                    return existingSkill;
+                })
+                .map(skillRepository::save)
+                .map(skillMapper::toDto);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -125,6 +155,25 @@ public class SkillService {
      */
     public void delete(Long id) {
         LOG.debug("Request to delete Skill : {}", id);
-        skillRepository.deleteById(id);
+        if (canManipulate(id)) {
+            skillRepository.deleteById(id);
+        }
+    }
+
+    private boolean canManipulate(Long id) throws RuntimeException {
+        Optional<String> login = getCurrentUserLogin();
+        if (login.isEmpty()) {
+            throw new RuntimeException("User not logged in!");
+        }
+
+        Optional<Skill> skill = skillRepository.findById(id);
+        if (skill.isEmpty()) {
+            throw new RuntimeException("Skill not found!");
+        }
+
+        if (!skill.get().getBiography().getUser().getLogin().equals(login.get())) {
+            throw new RuntimeException("Skill not assigned to biography owned by user!");
+        }
+        return true;
     }
 }
