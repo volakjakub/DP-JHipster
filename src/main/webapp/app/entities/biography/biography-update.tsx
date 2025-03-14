@@ -46,7 +46,7 @@ export const BiographyUpdate = () => {
     const entity = {
       ...biographyEntity,
       ...values,
-      user: account,
+      user: biographyEntity.user,
     };
 
     if (isNew) {
@@ -193,11 +193,6 @@ export const BiographyUpdate = () => {
                   required: { value: true, message: 'Toto pole je povinné.' },
                 }}
               />
-              <ValidatedField id="biography-user" name="user" data-cy="user" label="Uživatel" type="select" required={true} hidden={true}>
-                <option defaultChecked={true} value={account.id} key={account.id}>
-                  {account.login}
-                </option>
-              </ValidatedField>
               {isNew ? (
                 <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to={`/`} replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
