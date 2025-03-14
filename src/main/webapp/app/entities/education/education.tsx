@@ -92,15 +92,11 @@ export const Education = () => {
   return (
     <div>
       <h2 id="education-heading" data-cy="EducationHeading">
-        Educations
+        Vzdělání
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
             <FontAwesomeIcon icon="sync" spin={loading} /> Refresh list
           </Button>
-          <Link to="/education/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp; Vytvořit Education
-          </Link>
         </div>
       </h2>
       <div className="table-responsive">
@@ -112,19 +108,19 @@ export const Education = () => {
                   ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                 </th>
                 <th className="hand" onClick={sort('school')}>
-                  School <FontAwesomeIcon icon={getSortIconByFieldName('school')} />
+                  Škola <FontAwesomeIcon icon={getSortIconByFieldName('school')} />
                 </th>
                 <th className="hand" onClick={sort('type')}>
-                  Type <FontAwesomeIcon icon={getSortIconByFieldName('type')} />
+                  Typ <FontAwesomeIcon icon={getSortIconByFieldName('type')} />
                 </th>
                 <th className="hand" onClick={sort('start')}>
-                  Start <FontAwesomeIcon icon={getSortIconByFieldName('start')} />
+                  Počátek studia <FontAwesomeIcon icon={getSortIconByFieldName('start')} />
                 </th>
                 <th className="hand" onClick={sort('end')}>
-                  End <FontAwesomeIcon icon={getSortIconByFieldName('end')} />
+                  Ukončení studia <FontAwesomeIcon icon={getSortIconByFieldName('end')} />
                 </th>
                 <th>
-                  Biography <FontAwesomeIcon icon="sort" />
+                  Životopis <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -150,9 +146,10 @@ export const Education = () => {
                       <Button
                         tag={Link}
                         to={`/education/${education.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                        color="primary"
+                        color="secondary"
                         size="sm"
                         data-cy="entityEditButton"
+                        disabled={true}
                       >
                         <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
                       </Button>
@@ -160,9 +157,10 @@ export const Education = () => {
                         onClick={() =>
                           (window.location.href = `/education/${education.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`)
                         }
-                        color="danger"
+                        color="secondary"
                         size="sm"
                         data-cy="entityDeleteButton"
+                        disabled={true}
                       >
                         <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit</span>
                       </Button>

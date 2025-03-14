@@ -1,9 +1,12 @@
 package org.adastra.curriculum.service;
 
+import static org.adastra.curriculum.security.SecurityUtils.getCurrentUserLogin;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.adastra.curriculum.domain.Education;
+import org.adastra.curriculum.domain.Language;
 import org.adastra.curriculum.repository.EducationRepository;
 import org.adastra.curriculum.service.dto.EducationDTO;
 import org.adastra.curriculum.service.mapper.EducationMapper;
@@ -40,6 +43,14 @@ public class EducationService {
      */
     public EducationDTO save(EducationDTO educationDTO) {
         LOG.debug("Request to save Education : {}", educationDTO);
+        Optional<String> login = getCurrentUserLogin();
+        if (login.isEmpty()) {
+            throw new RuntimeException("User not logged in!");
+        }
+        if (!educationDTO.getBiography().getUser().getLogin().equals(login.get())) {
+            throw new RuntimeException("Cannot create Education for different Biography!");
+        }
+
         Education education = educationMapper.toEntity(educationDTO);
         education = educationRepository.save(education);
         return educationMapper.toDto(education);
@@ -53,9 +64,13 @@ public class EducationService {
      */
     public EducationDTO update(EducationDTO educationDTO) {
         LOG.debug("Request to update Education : {}", educationDTO);
-        Education education = educationMapper.toEntity(educationDTO);
-        education = educationRepository.save(education);
-        return educationMapper.toDto(education);
+        if (canManipulate(educationDTO.getId())) {
+            Education education = educationMapper.toEntity(educationDTO);
+            education = educationRepository.save(education);
+            return educationMapper.toDto(education);
+        } else {
+            throw new RuntimeException("Education not assigned to biography owned by user!");
+        }
     }
 
     /**
@@ -66,16 +81,18 @@ public class EducationService {
      */
     public Optional<EducationDTO> partialUpdate(EducationDTO educationDTO) {
         LOG.debug("Request to partially update Education : {}", educationDTO);
+        if (canManipulate(educationDTO.getId())) {
+            return educationRepository
+                .findById(educationDTO.getId())
+                .map(existingEducation -> {
+                    educationMapper.partialUpdate(existingEducation, educationDTO);
 
-        return educationRepository
-            .findById(educationDTO.getId())
-            .map(existingEducation -> {
-                educationMapper.partialUpdate(existingEducation, educationDTO);
-
-                return existingEducation;
-            })
-            .map(educationRepository::save)
-            .map(educationMapper::toDto);
+                    return existingEducation;
+                })
+                .map(educationRepository::save)
+                .map(educationMapper::toDto);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -125,6 +142,25 @@ public class EducationService {
      */
     public void delete(Long id) {
         LOG.debug("Request to delete Education : {}", id);
-        educationRepository.deleteById(id);
+        if (canManipulate(id)) {
+            educationRepository.deleteById(id);
+        }
+    }
+
+    private boolean canManipulate(Long id) throws RuntimeException {
+        Optional<String> login = getCurrentUserLogin();
+        if (login.isEmpty()) {
+            throw new RuntimeException("User not logged in!");
+        }
+
+        Optional<Education> education = educationRepository.findById(id);
+        if (education.isEmpty()) {
+            throw new RuntimeException("Education not found!");
+        }
+
+        if (!education.get().getBiography().getUser().getLogin().equals(login.get())) {
+            throw new RuntimeException("Education not assigned to biography owned by user!");
+        }
+        return true;
     }
 }
