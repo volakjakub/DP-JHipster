@@ -15,6 +15,8 @@ import org.adastra.curriculum.service.dto.AdminUserDTO;
 import org.adastra.curriculum.service.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,6 +33,9 @@ import tech.jhipster.security.RandomUtil;
 public class UserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+
+    @Autowired
+    private Environment env;
 
     private final UserRepository userRepository;
 
@@ -145,7 +150,13 @@ public class UserService {
         } else {
             user.setLangKey(userDTO.getLangKey());
         }
-        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
+        String password;
+        if (Arrays.asList(env.getActiveProfiles()).contains("dev")) {
+            password = "test"; // Use test password in DEV environment
+        } else {
+            password = RandomUtil.generatePassword();
+        }
+        String encryptedPassword = passwordEncoder.encode(password);
         user.setPassword(encryptedPassword);
         user.setResetKey(RandomUtil.generateResetKey());
         user.setResetDate(Instant.now());
