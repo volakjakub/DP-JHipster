@@ -17,45 +17,60 @@ export const SkillDetail = () => {
     dispatch(getEntity(id));
   }, []);
 
+  const account = useAppSelector(state => state.authentication.account);
   const skillEntity = useAppSelector(state => state.skill.entity);
   return (
     <Row>
       <Col md="8">
-        <h2 data-cy="skillDetailsHeading">Skill</h2>
+        <h2 data-cy="skillDetailsHeading">Dovednost</h2>
         <dl className="jh-entity-details">
           <dt>
             <span id="id">ID</span>
           </dt>
           <dd>{skillEntity.id}</dd>
           <dt>
-            <span id="name">Name</span>
+            <span id="name">Název</span>
           </dt>
           <dd>{skillEntity.name}</dd>
           <dt>
-            <span id="expertise">Expertise</span>
+            <span id="expertise">Zkušenost</span>
           </dt>
           <dd>{skillEntity.expertise}</dd>
-          <dt>Biography</dt>
+          <dt>Životopis</dt>
           <dd>{skillEntity.biography ? skillEntity.biography.id : ''}</dd>
-          <dt>Projects</dt>
+          <dt>Projekty</dt>
           <dd>
             {skillEntity.projects
               ? skillEntity.projects.map((val, i) => (
                   <span key={val.id}>
-                    <a>{val.id}</a>
+                    {val.id}
                     {skillEntity.projects && i === skillEntity.projects.length - 1 ? '' : ', '}
                   </span>
                 ))
               : null}
           </dd>
         </dl>
-        <Button tag={Link} to="/skill" replace color="info" data-cy="entityDetailsBackButton">
-          <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Zpět</span>
-        </Button>
-        &nbsp;
-        <Button tag={Link} to={`/skill/${skillEntity.id}/edit`} replace color="primary">
-          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
-        </Button>
+        {account && account?.login === skillEntity.biography?.user?.login ? (
+          <div>
+            <Button tag={Link} to={`/biography/${skillEntity.biography?.id}`} replace color="info" data-cy="entityDetailsBackButton">
+              <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Zpět</span>
+            </Button>
+            &nbsp;
+            <Button tag={Link} to={`/skill/${skillEntity.id}/edit`} replace color="primary">
+              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
+            </Button>
+          </div>
+        ) : (
+          <div>
+            <Button tag={Link} to="/skill" replace color="info" data-cy="entityDetailsBackButton">
+              <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Zpět</span>
+            </Button>
+            &nbsp;
+            <Button tag={Link} to={`/skill/${skillEntity.id}/edit`} replace color="secondary" disabled={true}>
+              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
+            </Button>
+          </div>
+        )}
       </Col>
     </Row>
   );
