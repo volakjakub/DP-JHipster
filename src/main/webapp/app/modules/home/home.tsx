@@ -14,7 +14,7 @@ export const Home = () => {
   const account = useAppSelector(state => state.authentication.account);
 
   useEffect(() => {
-    if (account?.login) {
+    if (account?.login && account?.authorities.includes('ROLE_USER')) {
       dispatch(getBiographyEntityByUsername(account.login));
     }
   }, []);
@@ -26,11 +26,17 @@ export const Home = () => {
         <h1 className="display-4">Vítejte v Curriculum!</h1>
         <p className="lead">V této aplikaci si můžete spravovat svůj profesní životopis.</p>
         {account?.login ? (
-          biographyEntity?.id ? (
+          account?.authorities.includes('ROLE_USER') && biographyEntity?.id ? (
             <div>
               <Button tag={Link} to={`/biography/${biographyEntity?.id}`} color="info" size="sm" data-cy="entityDetailsButton">
                 <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">Můj životopis</span>
               </Button>
+            </div>
+          ) : account?.authorities.includes('ROLE_ADMIN') ? (
+            <div>
+              <Alert color="warning">
+                Jste přihlášen jako administrátor. Pro vytvoření životopisu se prosím odhlašte a přihlašte jako uživatel.
+              </Alert>
             </div>
           ) : (
             <div>
