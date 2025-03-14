@@ -1,8 +1,11 @@
 package org.adastra.curriculum.service;
 
+import static org.adastra.curriculum.security.SecurityUtils.getCurrentUserLogin;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.adastra.curriculum.domain.Biography;
 import org.adastra.curriculum.domain.Language;
 import org.adastra.curriculum.repository.LanguageRepository;
 import org.adastra.curriculum.service.dto.LanguageDTO;
@@ -40,6 +43,22 @@ public class LanguageService {
      */
     public LanguageDTO save(LanguageDTO languageDTO) {
         LOG.debug("Request to save Language : {}", languageDTO);
+        Optional<String> login = getCurrentUserLogin();
+        if (login.isEmpty()) {
+            throw new RuntimeException("User not logged in!");
+        }
+        if (!languageDTO.getBiography().getUser().getLogin().equals(login.get())) {
+            throw new RuntimeException("Cannot create Language for different Biography!");
+        }
+
+        Optional<Language> languageOptional = languageRepository.findOneByNameAndBiographyId(
+            languageDTO.getName(),
+            languageDTO.getBiography().getId()
+        );
+        if (languageOptional.isPresent()) {
+            throw new RuntimeException("Language already exists!");
+        }
+
         Language language = languageMapper.toEntity(languageDTO);
         language = languageRepository.save(language);
         return languageMapper.toDto(language);
@@ -53,9 +72,21 @@ public class LanguageService {
      */
     public LanguageDTO update(LanguageDTO languageDTO) {
         LOG.debug("Request to update Language : {}", languageDTO);
-        Language language = languageMapper.toEntity(languageDTO);
-        language = languageRepository.save(language);
-        return languageMapper.toDto(language);
+        if (canManipulate(languageDTO.getId())) {
+            Optional<Language> languageOptional = languageRepository.findOneByNameAndBiographyId(
+                languageDTO.getName(),
+                languageDTO.getBiography().getId()
+            );
+            if (languageOptional.isPresent() && !languageOptional.get().getId().equals(languageDTO.getId())) {
+                throw new RuntimeException("Language already exists!");
+            }
+
+            Language language = languageMapper.toEntity(languageDTO);
+            language = languageRepository.save(language);
+            return languageMapper.toDto(language);
+        } else {
+            throw new RuntimeException("Language not assigned to biography owned by user!");
+        }
     }
 
     /**
@@ -66,16 +97,26 @@ public class LanguageService {
      */
     public Optional<LanguageDTO> partialUpdate(LanguageDTO languageDTO) {
         LOG.debug("Request to partially update Language : {}", languageDTO);
+        if (canManipulate(languageDTO.getId())) {
+            Optional<Language> languageOptional = languageRepository.findOneByNameAndBiographyId(
+                languageDTO.getName(),
+                languageDTO.getBiography().getId()
+            );
+            if (languageOptional.isPresent() && !languageOptional.get().getId().equals(languageDTO.getId())) {
+                throw new RuntimeException("Language already exists!");
+            }
 
-        return languageRepository
-            .findById(languageDTO.getId())
-            .map(existingLanguage -> {
-                languageMapper.partialUpdate(existingLanguage, languageDTO);
+            return languageRepository
+                .findById(languageDTO.getId())
+                .map(existingLanguage -> {
+                    languageMapper.partialUpdate(existingLanguage, languageDTO);
 
-                return existingLanguage;
-            })
-            .map(languageRepository::save)
-            .map(languageMapper::toDto);
+                    return existingLanguage;
+                })
+                .map(languageRepository::save)
+                .map(languageMapper::toDto);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -123,8 +164,27 @@ public class LanguageService {
      *
      * @param id the id of the entity.
      */
-    public void delete(Long id) {
+    public void delete(Long id) throws RuntimeException {
         LOG.debug("Request to delete Language : {}", id);
-        languageRepository.deleteById(id);
+        if (canManipulate(id)) {
+            languageRepository.deleteById(id);
+        }
+    }
+
+    private boolean canManipulate(Long id) throws RuntimeException {
+        Optional<String> login = getCurrentUserLogin();
+        if (login.isEmpty()) {
+            throw new RuntimeException("User not logged in!");
+        }
+
+        Optional<Language> language = languageRepository.findById(id);
+        if (language.isEmpty()) {
+            throw new RuntimeException("Language not found!");
+        }
+
+        if (!language.get().getBiography().getUser().getLogin().equals(login.get())) {
+            throw new RuntimeException("Language not assigned to biography owned by user!");
+        }
+        return true;
     }
 }
