@@ -9,6 +9,7 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from './skill.reducer';
+import ExpertiseTypeConverter from 'app/shared/converter/ExpertiseTypeConverter';
 
 export const Skill = () => {
   const dispatch = useAppDispatch();
@@ -127,7 +128,9 @@ export const Skill = () => {
                     </Button>
                   </td>
                   <td>{skill.name}</td>
-                  <td>{skill.expertise}</td>
+                  <td>
+                    <ExpertiseTypeConverter value={skill.expertise} />
+                  </td>
                   <td>{skill.biography ? <Link to={`/biography/${skill.biography.id}`}>{skill.biography.id}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

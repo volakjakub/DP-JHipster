@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './skill.reducer';
+import ExpertiseTypeConverter from 'app/shared/converter/ExpertiseTypeConverter';
 
 export const SkillDetail = () => {
   const dispatch = useAppDispatch();
@@ -35,7 +36,9 @@ export const SkillDetail = () => {
           <dt>
             <span id="expertise">Zkušenost</span>
           </dt>
-          <dd>{skillEntity.expertise}</dd>
+          <dd>
+            <ExpertiseTypeConverter value={skillEntity.expertise} />
+          </dd>
           <dt>Životopis</dt>
           <dd>{skillEntity.biography ? skillEntity.biography.id : ''}</dd>
           <dt>Projekty</dt>

@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { createEntity, getEntity, reset, updateEntity } from './skill.reducer';
+import ExpertiseTypeConverter from 'app/shared/converter/ExpertiseTypeConverter';
 
 export const SkillUpdate = () => {
   const dispatch = useAppDispatch();
@@ -110,7 +111,23 @@ export const SkillUpdate = () => {
                   required: { value: true, message: 'Toto pole je povinné.' },
                   validate: v => isNumber(v) || 'Toto pole by mělo obsahovat číslo.',
                 }}
-              />
+              >
+                <option value={1} key={1}>
+                  <ExpertiseTypeConverter value={1} />
+                </option>
+                <option value={2} key={2}>
+                  <ExpertiseTypeConverter value={2} />
+                </option>
+                <option value={3} key={3}>
+                  <ExpertiseTypeConverter value={3} />
+                </option>
+                <option value={4} key={4}>
+                  <ExpertiseTypeConverter value={4} />
+                </option>
+                <option value={5} key={5}>
+                  <ExpertiseTypeConverter value={5} />
+                </option>
+              </ValidatedField>
               <Button
                 tag={Link}
                 id="cancel-save"

@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from './language.reducer';
 import LanguageNameConverter from 'app/shared/converter/LanguageNameConverter';
+import ExpertiseTypeConverter from 'app/shared/converter/ExpertiseTypeConverter';
 
 export const Language = () => {
   const dispatch = useAppDispatch();
@@ -130,7 +131,9 @@ export const Language = () => {
                   <td>
                     <LanguageNameConverter enumValue={language.name} />
                   </td>
-                  <td>{language.expertise}</td>
+                  <td>
+                    <ExpertiseTypeConverter value={language.expertise} />
+                  </td>
                   <td>{language.biography ? <Link to={`/biography/${language.biography.id}`}>{language.biography.id}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

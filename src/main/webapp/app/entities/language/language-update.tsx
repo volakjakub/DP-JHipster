@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { LanguageName } from 'app/shared/model/enumerations/language-name.model';
 import { createEntity, getEntity, reset, updateEntity } from './language.reducer';
 import LanguageNameConverter from 'app/shared/converter/LanguageNameConverter';
+import ExpertiseTypeConverter from 'app/shared/converter/ExpertiseTypeConverter';
 
 export const LanguageUpdate = () => {
   const dispatch = useAppDispatch();
@@ -103,12 +104,28 @@ export const LanguageUpdate = () => {
                 id="language-expertise"
                 name="expertise"
                 data-cy="expertise"
-                type="text"
+                type="select"
                 validate={{
                   required: { value: true, message: 'Toto pole je povinné.' },
                   validate: v => isNumber(v) || 'Toto pole by mělo obsahovat číslo.',
                 }}
-              />
+              >
+                <option value={1} key={1}>
+                  <ExpertiseTypeConverter value={1} />
+                </option>
+                <option value={2} key={2}>
+                  <ExpertiseTypeConverter value={2} />
+                </option>
+                <option value={3} key={3}>
+                  <ExpertiseTypeConverter value={3} />
+                </option>
+                <option value={4} key={4}>
+                  <ExpertiseTypeConverter value={4} />
+                </option>
+                <option value={5} key={5}>
+                  <ExpertiseTypeConverter value={5} />
+                </option>
+              </ValidatedField>
               <Button
                 tag={Link}
                 id="cancel-save"
