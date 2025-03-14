@@ -7,3 +7,10 @@ export enum EducationType {
 
   DOCTORATE = 'DOCTORATE',
 }
+
+export const EducationTypeValues = {
+  [EducationType.HIGH_SCHOOL]: 'Maturitní vzdělání',
+  [EducationType.BACHELOR]: 'Bakalářské vzdělání',
+  [EducationType.MASTER]: 'Magisterské vzdělání',
+  [EducationType.DOCTORATE]: 'Doktorské vzdělání',
+};

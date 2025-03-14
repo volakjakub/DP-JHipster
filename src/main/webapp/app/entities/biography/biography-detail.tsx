@@ -12,6 +12,8 @@ import { getLanguageEntitiesByBiographyId } from 'app/entities/language/language
 import { getEducationEntitiesByBiographyId } from 'app/entities/education/education.reducer';
 import { getProjectEntitiesByBiographyId } from 'app/entities/project/project.reducer';
 import { getSkillEntitiesByBiographyId } from 'app/entities/skill/skill.reducer';
+import LanguageNameConverter from 'app/shared/converter/LanguageNameConverter';
+import EducationTypeConverter from 'app/shared/converter/EducationTypeConverter';
 
 export const BiographyDetail = () => {
   const dispatch = useAppDispatch();
@@ -142,7 +144,9 @@ export const BiographyDetail = () => {
                 <tbody>
                   {languageList.map((language, i) => (
                     <tr key={`language-${i}`} data-cy="entityTable">
-                      <td>{language.name}</td>
+                      <td>
+                        <LanguageNameConverter enumValue={language.name} />
+                      </td>
                       <td>{language.expertise}</td>
                       <td className="text-end">
                         {account && account?.login === biographyEntity.user?.login ? (
@@ -221,7 +225,9 @@ export const BiographyDetail = () => {
                   {educationList.map((education, i) => (
                     <tr key={`education-${i}`} data-cy="entityTable">
                       <td>{education.school}</td>
-                      <td>{education.type}</td>
+                      <td>
+                        <EducationTypeConverter enumValue={education.type} />
+                      </td>
                       <td>{education.start ? <TextFormat value={education.start} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
                       <td>{education.end ? <TextFormat value={education.end} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
                       <td className="text-end">

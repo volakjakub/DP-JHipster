@@ -10,6 +10,7 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from './education.reducer';
+import EducationTypeConverter from 'app/shared/converter/EducationTypeConverter';
 
 export const Education = () => {
   const dispatch = useAppDispatch();
@@ -134,7 +135,9 @@ export const Education = () => {
                     </Button>
                   </td>
                   <td>{education.school}</td>
-                  <td>{education.type}</td>
+                  <td>
+                    <EducationTypeConverter enumValue={education.type} />
+                  </td>
                   <td>{education.start ? <TextFormat type="date" value={education.start} format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
                   <td>{education.end ? <TextFormat type="date" value={education.end} format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
                   <td>{education.biography ? <Link to={`/biography/${education.biography.id}`}>{education.biography.id}</Link> : ''}</td>

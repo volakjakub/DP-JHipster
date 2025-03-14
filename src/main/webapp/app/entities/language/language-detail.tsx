@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './language.reducer';
+import LanguageNameConverter from 'app/shared/converter/LanguageNameConverter';
 
 export const LanguageDetail = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +32,9 @@ export const LanguageDetail = () => {
           <dt>
             <span id="name">Název</span>
           </dt>
-          <dd>{languageEntity.name}</dd>
+          <dd>
+            <LanguageNameConverter enumValue={languageEntity.name} />
+          </dd>
           <dt>
             <span id="expertise">Zkušenost</span>
           </dt>

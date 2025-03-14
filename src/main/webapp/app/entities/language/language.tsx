@@ -9,6 +9,7 @@ import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-u
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntities } from './language.reducer';
+import LanguageNameConverter from 'app/shared/converter/LanguageNameConverter';
 
 export const Language = () => {
   const dispatch = useAppDispatch();
@@ -126,7 +127,9 @@ export const Language = () => {
                       {language.id}
                     </Button>
                   </td>
-                  <td>{language.name}</td>
+                  <td>
+                    <LanguageNameConverter enumValue={language.name} />
+                  </td>
                   <td>{language.expertise}</td>
                   <td>{language.biography ? <Link to={`/biography/${language.biography.id}`}>{language.biography.id}</Link> : ''}</td>
                   <td className="text-end">

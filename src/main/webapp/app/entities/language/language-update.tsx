@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { LanguageName } from 'app/shared/model/enumerations/language-name.model';
 import { createEntity, getEntity, reset, updateEntity } from './language.reducer';
+import LanguageNameConverter from 'app/shared/converter/LanguageNameConverter';
 
 export const LanguageUpdate = () => {
   const dispatch = useAppDispatch();
@@ -93,7 +94,7 @@ export const LanguageUpdate = () => {
               <ValidatedField label="Název" id="language-name" name="name" data-cy="name" type="select">
                 {languageNameValues.map(languageName => (
                   <option value={languageName} key={languageName}>
-                    {languageName}
+                    <LanguageNameConverter enumValue={languageName as LanguageName} />
                   </option>
                 ))}
               </ValidatedField>

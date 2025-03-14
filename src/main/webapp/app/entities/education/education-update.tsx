@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { EducationType } from 'app/shared/model/enumerations/education-type.model';
 import { createEntity, getEntity, reset, updateEntity } from './education.reducer';
+import EducationTypeConverter from 'app/shared/converter/EducationTypeConverter';
 
 export const EducationUpdate = () => {
   const dispatch = useAppDispatch();
@@ -101,7 +102,7 @@ export const EducationUpdate = () => {
               <ValidatedField label="Typ" id="education-type" name="type" data-cy="type" type="select">
                 {educationTypeValues.map(educationType => (
                   <option value={educationType} key={educationType}>
-                    {educationType}
+                    <EducationTypeConverter enumValue={educationType as EducationType} />
                   </option>
                 ))}
               </ValidatedField>
