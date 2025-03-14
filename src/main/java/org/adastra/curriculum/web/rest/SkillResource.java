@@ -178,7 +178,7 @@ public class SkillResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the skillDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.USER + "\")")
+    @PreAuthorize("hasAnyAuthority('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.USER + "')")
     public ResponseEntity<SkillDTO> getSkill(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Skill : {}", id);
         Optional<SkillDTO> skillDTO = skillService.findOne(id);

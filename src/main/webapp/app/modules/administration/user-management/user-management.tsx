@@ -99,7 +99,7 @@ export const UserManagement = () => {
         Uživatelé
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
-            <FontAwesomeIcon icon="sync" spin={loading} /> Refresh list
+            <FontAwesomeIcon icon="sync" spin={loading} /> Obnovit
           </Button>
           <Link to="new" className="btn btn-primary jh-create-entity">
             <FontAwesomeIcon icon="plus" /> Vytvořit nového uživatele

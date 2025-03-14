@@ -185,7 +185,7 @@ public class BiographyResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the biographyDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.USER + "\")")
+    @PreAuthorize("hasAnyAuthority('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.USER + "')")
     public ResponseEntity<BiographyDTO> getBiography(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Biography : {}", id);
         Optional<BiographyDTO> biographyDTO = biographyService.findOne(id);

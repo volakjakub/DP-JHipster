@@ -1,11 +1,16 @@
 package org.adastra.curriculum.service;
 
+import static org.adastra.curriculum.security.SecurityUtils.getCurrentUserLogin;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.adastra.curriculum.domain.Project;
+import org.adastra.curriculum.domain.Skill;
 import org.adastra.curriculum.repository.ProjectRepository;
+import org.adastra.curriculum.repository.SkillRepository;
 import org.adastra.curriculum.service.dto.ProjectDTO;
+import org.adastra.curriculum.service.dto.SkillDTO;
 import org.adastra.curriculum.service.mapper.ProjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +30,13 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
 
+    private final SkillRepository skillRepository;
+
     private final ProjectMapper projectMapper;
 
-    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
+    public ProjectService(ProjectRepository projectRepository, SkillRepository skillRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
+        this.skillRepository = skillRepository;
         this.projectMapper = projectMapper;
     }
 
@@ -40,6 +48,21 @@ public class ProjectService {
      */
     public ProjectDTO save(ProjectDTO projectDTO) {
         LOG.debug("Request to save Project : {}", projectDTO);
+        Optional<String> login = getCurrentUserLogin();
+        if (login.isEmpty()) {
+            throw new RuntimeException("User not logged in!");
+        }
+        if (!projectDTO.getBiography().getUser().getLogin().equals(login.get())) {
+            throw new RuntimeException("Cannot create Project for different Biography!");
+        }
+
+        for (SkillDTO skillDTO : projectDTO.getSkills()) {
+            Optional<Skill> skill = skillRepository.findById(skillDTO.getId());
+            if (skill.isPresent() && !skill.get().getBiography().getId().equals(projectDTO.getBiography().getId())) {
+                throw new RuntimeException("Cannot assign Skill from different Biography!");
+            }
+        }
+
         Project project = projectMapper.toEntity(projectDTO);
         project = projectRepository.save(project);
         return projectMapper.toDto(project);
@@ -53,9 +76,20 @@ public class ProjectService {
      */
     public ProjectDTO update(ProjectDTO projectDTO) {
         LOG.debug("Request to update Project : {}", projectDTO);
-        Project project = projectMapper.toEntity(projectDTO);
-        project = projectRepository.save(project);
-        return projectMapper.toDto(project);
+        if (canManipulate(projectDTO.getId())) {
+            for (SkillDTO skillDTO : projectDTO.getSkills()) {
+                Optional<Skill> skill = skillRepository.findById(skillDTO.getId());
+                if (skill.isPresent() && !skill.get().getBiography().getId().equals(projectDTO.getBiography().getId())) {
+                    throw new RuntimeException("Cannot assign Skill from different Biography!");
+                }
+            }
+
+            Project project = projectMapper.toEntity(projectDTO);
+            project = projectRepository.save(project);
+            return projectMapper.toDto(project);
+        } else {
+            throw new RuntimeException("Project not assigned to biography owned by user!");
+        }
     }
 
     /**
@@ -66,16 +100,25 @@ public class ProjectService {
      */
     public Optional<ProjectDTO> partialUpdate(ProjectDTO projectDTO) {
         LOG.debug("Request to partially update Project : {}", projectDTO);
+        if (canManipulate(projectDTO.getId())) {
+            for (SkillDTO skillDTO : projectDTO.getSkills()) {
+                Optional<Skill> skill = skillRepository.findById(skillDTO.getId());
+                if (skill.isPresent() && !skill.get().getBiography().getId().equals(projectDTO.getBiography().getId())) {
+                    throw new RuntimeException("Cannot assign Skill from different Biography!");
+                }
+            }
 
-        return projectRepository
-            .findById(projectDTO.getId())
-            .map(existingProject -> {
-                projectMapper.partialUpdate(existingProject, projectDTO);
+            return projectRepository
+                .findById(projectDTO.getId())
+                .map(existingProject -> {
+                    projectMapper.partialUpdate(existingProject, projectDTO);
 
-                return existingProject;
-            })
-            .map(projectRepository::save)
-            .map(projectMapper::toDto);
+                    return existingProject;
+                })
+                .map(projectRepository::save)
+                .map(projectMapper::toDto);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -134,6 +177,25 @@ public class ProjectService {
      */
     public void delete(Long id) {
         LOG.debug("Request to delete Project : {}", id);
-        projectRepository.deleteById(id);
+        if (canManipulate(id)) {
+            projectRepository.deleteById(id);
+        }
+    }
+
+    private boolean canManipulate(Long id) throws RuntimeException {
+        Optional<String> login = getCurrentUserLogin();
+        if (login.isEmpty()) {
+            throw new RuntimeException("User not logged in!");
+        }
+
+        Optional<Project> project = projectRepository.findById(id);
+        if (project.isEmpty()) {
+            throw new RuntimeException("Project not found!");
+        }
+
+        if (!project.get().getBiography().getUser().getLogin().equals(login.get())) {
+            throw new RuntimeException("Project not assigned to biography owned by user!");
+        }
+        return true;
     }
 }
