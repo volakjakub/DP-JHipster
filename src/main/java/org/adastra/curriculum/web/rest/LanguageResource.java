@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.adastra.curriculum.repository.LanguageRepository;
+import org.adastra.curriculum.security.AuthoritiesConstants;
 import org.adastra.curriculum.service.LanguageService;
 import org.adastra.curriculum.service.dto.LanguageDTO;
 import org.adastra.curriculum.web.rest.errors.BadRequestAlertException;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -55,6 +57,7 @@ public class LanguageResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<LanguageDTO> createLanguage(@Valid @RequestBody LanguageDTO languageDTO) throws URISyntaxException {
         LOG.debug("REST request to save Language : {}", languageDTO);
         if (languageDTO.getId() != null) {
@@ -77,6 +80,7 @@ public class LanguageResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<LanguageDTO> updateLanguage(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody LanguageDTO languageDTO
@@ -111,6 +115,7 @@ public class LanguageResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<LanguageDTO> partialUpdateLanguage(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody LanguageDTO languageDTO
@@ -142,6 +147,7 @@ public class LanguageResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of languages in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<LanguageDTO>> getAllLanguages(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         LOG.debug("REST request to get a page of Languages");
         Page<LanguageDTO> page = languageService.findAll(pageable);
@@ -156,6 +162,7 @@ public class LanguageResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of languages in body.
      */
     @GetMapping("/biography")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<List<LanguageDTO>> getAllLanguagesByBiographyId(
         @RequestParam(name = "biographyId", required = true) Long biographyId
     ) {
@@ -171,6 +178,7 @@ public class LanguageResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the languageDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<LanguageDTO> getLanguage(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Language : {}", id);
         Optional<LanguageDTO> languageDTO = languageService.findOne(id);
@@ -184,6 +192,7 @@ public class LanguageResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<Void> deleteLanguage(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Language : {}", id);
         languageService.delete(id);

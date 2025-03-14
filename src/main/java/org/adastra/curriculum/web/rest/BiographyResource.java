@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.adastra.curriculum.repository.BiographyRepository;
+import org.adastra.curriculum.security.AuthoritiesConstants;
 import org.adastra.curriculum.service.BiographyService;
 import org.adastra.curriculum.service.dto.BiographyDTO;
 import org.adastra.curriculum.web.rest.errors.BadRequestAlertException;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -55,6 +57,7 @@ public class BiographyResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<BiographyDTO> createBiography(@Valid @RequestBody BiographyDTO biographyDTO) throws URISyntaxException {
         LOG.debug("REST request to save Biography : {}", biographyDTO);
         if (biographyDTO.getId() != null) {
@@ -77,6 +80,7 @@ public class BiographyResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<BiographyDTO> updateBiography(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody BiographyDTO biographyDTO
@@ -111,6 +115,7 @@ public class BiographyResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<BiographyDTO> partialUpdateBiography(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody BiographyDTO biographyDTO
@@ -143,6 +148,7 @@ public class BiographyResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of biographies in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<BiographyDTO>> getAllBiographies(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
@@ -165,6 +171,7 @@ public class BiographyResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the biography in body, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/user")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<BiographyDTO> getBiographyByUserId(@RequestParam(name = "username", required = true) String username) {
         LOG.debug("REST request to get the biography by Username : {}", username);
         Optional<BiographyDTO> biographyDTO = biographyService.findOneByUsername(username);
@@ -178,6 +185,7 @@ public class BiographyResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the biographyDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<BiographyDTO> getBiography(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Biography : {}", id);
         Optional<BiographyDTO> biographyDTO = biographyService.findOne(id);
@@ -191,6 +199,7 @@ public class BiographyResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<Void> deleteBiography(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Biography : {}", id);
         biographyService.delete(id);

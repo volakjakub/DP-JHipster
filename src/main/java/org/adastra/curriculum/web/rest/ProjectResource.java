@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.adastra.curriculum.repository.ProjectRepository;
+import org.adastra.curriculum.security.AuthoritiesConstants;
 import org.adastra.curriculum.service.ProjectService;
 import org.adastra.curriculum.service.dto.ProjectDTO;
 import org.adastra.curriculum.web.rest.errors.BadRequestAlertException;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -55,6 +57,7 @@ public class ProjectResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<ProjectDTO> createProject(@Valid @RequestBody ProjectDTO projectDTO) throws URISyntaxException {
         LOG.debug("REST request to save Project : {}", projectDTO);
         if (projectDTO.getId() != null) {
@@ -77,6 +80,7 @@ public class ProjectResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<ProjectDTO> updateProject(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody ProjectDTO projectDTO
@@ -111,6 +115,7 @@ public class ProjectResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<ProjectDTO> partialUpdateProject(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ProjectDTO projectDTO
@@ -143,6 +148,7 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<ProjectDTO>> getAllProjects(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
@@ -165,6 +171,7 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in body.
      */
     @GetMapping("/biography")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<List<ProjectDTO>> getAllProjectsByBiographyId(
         @RequestParam(name = "biographyId", required = true) Long biographyId
     ) {
@@ -180,6 +187,7 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the projectDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<ProjectDTO> getProject(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Project : {}", id);
         Optional<ProjectDTO> projectDTO = projectService.findOne(id);
@@ -193,6 +201,7 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<Void> deleteProject(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Project : {}", id);
         projectService.delete(id);
