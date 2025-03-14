@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
-import { TextFormat, byteSize, openFile } from 'react-jhipster';
+import { TextFormat, openFile } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
@@ -14,6 +14,7 @@ import { getProjectEntitiesByBiographyId } from 'app/entities/project/project.re
 import { getSkillEntitiesByBiographyId } from 'app/entities/skill/skill.reducer';
 import LanguageNameConverter from 'app/shared/converter/LanguageNameConverter';
 import EducationTypeConverter from 'app/shared/converter/EducationTypeConverter';
+import ExpertiseTypeConverter from 'app/shared/converter/ExpertiseTypeConverter';
 
 export const BiographyDetail = () => {
   const dispatch = useAppDispatch();
@@ -147,7 +148,9 @@ export const BiographyDetail = () => {
                       <td>
                         <LanguageNameConverter enumValue={language.name} />
                       </td>
-                      <td>{language.expertise}</td>
+                      <td>
+                        <ExpertiseTypeConverter value={language.expertise} />
+                      </td>
                       <td className="text-end">
                         {account && account?.login === biographyEntity.user?.login ? (
                           <div className="btn-group flex-btn-group-container">
@@ -305,7 +308,9 @@ export const BiographyDetail = () => {
                   {skillList.map((skill, i) => (
                     <tr key={`skill-${i}`} data-cy="entityTable">
                       <td>{skill.name}</td>
-                      <td>{skill.expertise}</td>
+                      <td>
+                        <ExpertiseTypeConverter value={skill.expertise} />
+                      </td>
                       <td className="text-end">
                         {account && account?.login === biographyEntity.user?.login ? (
                           <div className="btn-group flex-btn-group-container">

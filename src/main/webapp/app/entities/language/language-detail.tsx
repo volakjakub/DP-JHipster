@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './language.reducer';
 import LanguageNameConverter from 'app/shared/converter/LanguageNameConverter';
+import ExpertiseTypeConverter from 'app/shared/converter/ExpertiseTypeConverter';
 
 export const LanguageDetail = () => {
   const dispatch = useAppDispatch();
@@ -38,7 +39,9 @@ export const LanguageDetail = () => {
           <dt>
             <span id="expertise">Zkušenost</span>
           </dt>
-          <dd>{languageEntity.expertise}</dd>
+          <dd>
+            <ExpertiseTypeConverter value={languageEntity.expertise} />
+          </dd>
           <dt>Životopis</dt>
           <dd>{languageEntity.biography ? languageEntity.biography.id : ''}</dd>
         </dl>
