@@ -1,5 +1,7 @@
 package org.adastra.curriculum.service;
 
+import static org.adastra.curriculum.security.SecurityUtils.getCurrentUserLogin;
+
 import java.util.Optional;
 import org.adastra.curriculum.domain.Biography;
 import org.adastra.curriculum.repository.BiographyRepository;
@@ -38,9 +40,14 @@ public class BiographyService {
      */
     public BiographyDTO save(BiographyDTO biographyDTO) {
         LOG.debug("Request to save Biography : {}", biographyDTO);
-        Biography biography = biographyMapper.toEntity(biographyDTO);
-        biography = biographyRepository.save(biography);
-        return biographyMapper.toDto(biography);
+        Optional<Biography> biographyOptional = biographyRepository.findOneByUsername(biographyDTO.getUser().getLogin());
+        if (biographyOptional.isEmpty()) {
+            Biography biography = biographyMapper.toEntity(biographyDTO);
+            biography = biographyRepository.save(biography);
+            return biographyMapper.toDto(biography);
+        } else {
+            throw new RuntimeException("Biography for user already exists!");
+        }
     }
 
     /**
@@ -49,11 +56,15 @@ public class BiographyService {
      * @param biographyDTO the entity to save.
      * @return the persisted entity.
      */
-    public BiographyDTO update(BiographyDTO biographyDTO) {
+    public BiographyDTO update(BiographyDTO biographyDTO) throws RuntimeException {
         LOG.debug("Request to update Biography : {}", biographyDTO);
-        Biography biography = biographyMapper.toEntity(biographyDTO);
-        biography = biographyRepository.save(biography);
-        return biographyMapper.toDto(biography);
+        if (canManipulate(biographyDTO.getId())) {
+            Biography biography = biographyMapper.toEntity(biographyDTO);
+            biography = biographyRepository.save(biography);
+            return biographyMapper.toDto(biography);
+        } else {
+            throw new RuntimeException("Biography not owned by user!");
+        }
     }
 
     /**
@@ -62,18 +73,20 @@ public class BiographyService {
      * @param biographyDTO the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<BiographyDTO> partialUpdate(BiographyDTO biographyDTO) {
+    public Optional<BiographyDTO> partialUpdate(BiographyDTO biographyDTO) throws RuntimeException {
         LOG.debug("Request to partially update Biography : {}", biographyDTO);
+        if (canManipulate(biographyDTO.getId())) {
+            return biographyRepository
+                .findById(biographyDTO.getId())
+                .map(existingBiography -> {
+                    biographyMapper.partialUpdate(existingBiography, biographyDTO);
 
-        return biographyRepository
-            .findById(biographyDTO.getId())
-            .map(existingBiography -> {
-                biographyMapper.partialUpdate(existingBiography, biographyDTO);
-
-                return existingBiography;
-            })
-            .map(biographyRepository::save)
-            .map(biographyMapper::toDto);
+                    return existingBiography;
+                })
+                .map(biographyRepository::save)
+                .map(biographyMapper::toDto);
+        }
+        return Optional.empty();
     }
 
     /**
@@ -126,8 +139,27 @@ public class BiographyService {
      *
      * @param id the id of the entity.
      */
-    public void delete(Long id) {
+    public void delete(Long id) throws RuntimeException {
         LOG.debug("Request to delete Biography : {}", id);
-        biographyRepository.deleteById(id);
+        if (canManipulate(id)) {
+            biographyRepository.deleteById(id);
+        }
+    }
+
+    private boolean canManipulate(Long id) throws RuntimeException {
+        Optional<String> login = getCurrentUserLogin();
+        if (login.isEmpty()) {
+            throw new RuntimeException("User not logged in!");
+        }
+
+        Optional<Biography> biography = biographyRepository.findById(id);
+        if (biography.isEmpty()) {
+            throw new RuntimeException("Biography not found!");
+        }
+
+        if (!biography.get().getUser().getLogin().equals(login.get())) {
+            throw new RuntimeException("Biography not owned by user!");
+        }
+        return true;
     }
 }
