@@ -17,34 +17,49 @@ export const LanguageDetail = () => {
     dispatch(getEntity(id));
   }, []);
 
+  const account = useAppSelector(state => state.authentication.account);
   const languageEntity = useAppSelector(state => state.language.entity);
   return (
     <Row>
       <Col md="8">
-        <h2 data-cy="languageDetailsHeading">Language</h2>
+        <h2 data-cy="languageDetailsHeading">Jazyk</h2>
         <dl className="jh-entity-details">
           <dt>
             <span id="id">ID</span>
           </dt>
           <dd>{languageEntity.id}</dd>
           <dt>
-            <span id="name">Name</span>
+            <span id="name">Název</span>
           </dt>
           <dd>{languageEntity.name}</dd>
           <dt>
-            <span id="expertise">Expertise</span>
+            <span id="expertise">Zkušenost</span>
           </dt>
           <dd>{languageEntity.expertise}</dd>
-          <dt>Biography</dt>
+          <dt>Životopis</dt>
           <dd>{languageEntity.biography ? languageEntity.biography.id : ''}</dd>
         </dl>
-        <Button tag={Link} to="/language" replace color="info" data-cy="entityDetailsBackButton">
-          <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Zpět</span>
-        </Button>
-        &nbsp;
-        <Button tag={Link} to={`/language/${languageEntity.id}/edit`} replace color="primary">
-          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
-        </Button>
+        {account && account?.login === languageEntity.biography?.user?.login ? (
+          <div>
+            <Button tag={Link} to={`/biography/${languageEntity.biography?.id}`} replace color="info" data-cy="entityDetailsBackButton">
+              <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Zpět</span>
+            </Button>
+            &nbsp;
+            <Button tag={Link} to={`/language/${languageEntity.id}/edit`} replace color="primary">
+              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
+            </Button>
+          </div>
+        ) : (
+          <div>
+            <Button tag={Link} to="/language" replace color="info" data-cy="entityDetailsBackButton">
+              <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Zpět</span>
+            </Button>
+            &nbsp;
+            <Button tag={Link} to={`/language/${languageEntity.id}/edit`} replace color="secondary" disabled={true}>
+              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
+            </Button>
+          </div>
+        )}
       </Col>
     </Row>
   );

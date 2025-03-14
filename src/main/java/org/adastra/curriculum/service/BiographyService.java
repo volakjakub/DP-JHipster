@@ -40,6 +40,14 @@ public class BiographyService {
      */
     public BiographyDTO save(BiographyDTO biographyDTO) {
         LOG.debug("Request to save Biography : {}", biographyDTO);
+        Optional<String> login = getCurrentUserLogin();
+        if (login.isEmpty()) {
+            throw new RuntimeException("User not logged in!");
+        }
+        if (!biographyDTO.getUser().getLogin().equals(login.get())) {
+            throw new RuntimeException("Cannot create Biography for different User!");
+        }
+
         Optional<Biography> biographyOptional = biographyRepository.findOneByUsername(biographyDTO.getUser().getLogin());
         if (biographyOptional.isEmpty()) {
             Biography biography = biographyMapper.toEntity(biographyDTO);

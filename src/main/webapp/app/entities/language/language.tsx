@@ -91,15 +91,11 @@ export const Language = () => {
   return (
     <div>
       <h2 id="language-heading" data-cy="LanguageHeading">
-        Languages
+        Jazyky
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
-            <FontAwesomeIcon icon="sync" spin={loading} /> Refresh list
+            <FontAwesomeIcon icon="sync" spin={loading} /> Obnovit
           </Button>
-          <Link to="/language/new" className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
-            <FontAwesomeIcon icon="plus" />
-            &nbsp; Vytvořit Language
-          </Link>
         </div>
       </h2>
       <div className="table-responsive">
@@ -111,13 +107,13 @@ export const Language = () => {
                   ID <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                 </th>
                 <th className="hand" onClick={sort('name')}>
-                  Name <FontAwesomeIcon icon={getSortIconByFieldName('name')} />
+                  Název <FontAwesomeIcon icon={getSortIconByFieldName('name')} />
                 </th>
                 <th className="hand" onClick={sort('expertise')}>
-                  Expertise <FontAwesomeIcon icon={getSortIconByFieldName('expertise')} />
+                  Zkušenost <FontAwesomeIcon icon={getSortIconByFieldName('expertise')} />
                 </th>
                 <th>
-                  Biography <FontAwesomeIcon icon="sort" />
+                  Životopis <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -141,9 +137,10 @@ export const Language = () => {
                       <Button
                         tag={Link}
                         to={`/language/${language.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                        color="primary"
+                        color="secondary"
                         size="sm"
                         data-cy="entityEditButton"
+                        disabled={true}
                       >
                         <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
                       </Button>
@@ -151,9 +148,10 @@ export const Language = () => {
                         onClick={() =>
                           (window.location.href = `/language/${language.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`)
                         }
-                        color="danger"
+                        color="secondary"
                         size="sm"
                         data-cy="entityDeleteButton"
+                        disabled={true}
                       >
                         <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Odstranit</span>
                       </Button>
