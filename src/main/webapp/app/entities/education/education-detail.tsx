@@ -8,6 +8,7 @@ import { APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { getEntity } from './education.reducer';
+import EducationTypeConverter from 'app/shared/converter/EducationTypeConverter';
 
 export const EducationDetail = () => {
   const dispatch = useAppDispatch();
@@ -36,7 +37,9 @@ export const EducationDetail = () => {
           <dt>
             <span id="type">Typ</span>
           </dt>
-          <dd>{educationEntity.type}</dd>
+          <dd>
+            <EducationTypeConverter enumValue={educationEntity.type} />
+          </dd>
           <dt>
             <span id="start">Počátek studia</span>
           </dt>
