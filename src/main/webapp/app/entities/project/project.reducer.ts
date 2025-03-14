@@ -49,7 +49,6 @@ export const createEntity = createAsyncThunk(
   'project/create_entity',
   async (entity: IProject, thunkAPI) => {
     const result = await axios.post<IProject>(apiUrl, cleanEntity(entity));
-    thunkAPI.dispatch(getEntities({}));
     return result;
   },
   { serializeError: serializeAxiosError },
@@ -59,7 +58,6 @@ export const updateEntity = createAsyncThunk(
   'project/update_entity',
   async (entity: IProject, thunkAPI) => {
     const result = await axios.put<IProject>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
-    thunkAPI.dispatch(getEntities({}));
     return result;
   },
   { serializeError: serializeAxiosError },
@@ -69,7 +67,6 @@ export const partialUpdateEntity = createAsyncThunk(
   'project/partial_update_entity',
   async (entity: IProject, thunkAPI) => {
     const result = await axios.patch<IProject>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
-    thunkAPI.dispatch(getEntities({}));
     return result;
   },
   { serializeError: serializeAxiosError },
@@ -80,7 +77,6 @@ export const deleteEntity = createAsyncThunk(
   async (id: string | number, thunkAPI) => {
     const requestUrl = `${apiUrl}/${id}`;
     const result = await axios.delete<IProject>(requestUrl);
-    thunkAPI.dispatch(getEntities({}));
     return result;
   },
   { serializeError: serializeAxiosError },

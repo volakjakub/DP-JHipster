@@ -178,7 +178,7 @@ public class LanguageResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the languageDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.USER + "\")")
+    @PreAuthorize("hasAnyAuthority('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.USER + "')")
     public ResponseEntity<LanguageDTO> getLanguage(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Language : {}", id);
         Optional<LanguageDTO> languageDTO = languageService.findOne(id);

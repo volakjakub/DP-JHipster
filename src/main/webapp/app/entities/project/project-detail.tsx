@@ -18,57 +18,72 @@ export const ProjectDetail = () => {
     dispatch(getEntity(id));
   }, []);
 
+  const account = useAppSelector(state => state.authentication.account);
   const projectEntity = useAppSelector(state => state.project.entity);
   return (
     <Row>
       <Col md="8">
-        <h2 data-cy="projectDetailsHeading">Project</h2>
+        <h2 data-cy="projectDetailsHeading">Projekt</h2>
         <dl className="jh-entity-details">
           <dt>
             <span id="id">ID</span>
           </dt>
           <dd>{projectEntity.id}</dd>
           <dt>
-            <span id="name">Name</span>
+            <span id="name">Název</span>
           </dt>
           <dd>{projectEntity.name}</dd>
           <dt>
-            <span id="client">Client</span>
+            <span id="client">Klient</span>
           </dt>
           <dd>{projectEntity.client}</dd>
           <dt>
-            <span id="start">Start</span>
+            <span id="start">Začátek projektu</span>
           </dt>
           <dd>{projectEntity.start ? <TextFormat value={projectEntity.start} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}</dd>
           <dt>
-            <span id="end">End</span>
+            <span id="end">Ukončení projektu</span>
           </dt>
           <dd>{projectEntity.end ? <TextFormat value={projectEntity.end} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}</dd>
           <dt>
-            <span id="description">Description</span>
+            <span id="description">Popis</span>
           </dt>
           <dd>{projectEntity.description}</dd>
-          <dt>Biography</dt>
+          <dt>Životopis</dt>
           <dd>{projectEntity.biography ? projectEntity.biography.id : ''}</dd>
-          <dt>Skills</dt>
+          <dt>Dovednosti</dt>
           <dd>
             {projectEntity.skills
               ? projectEntity.skills.map((val, i) => (
                   <span key={val.id}>
-                    <a>{val.name}</a>
+                    {val.name}
                     {projectEntity.skills && i === projectEntity.skills.length - 1 ? '' : ', '}
                   </span>
                 ))
               : null}
           </dd>
         </dl>
-        <Button tag={Link} to="/project" replace color="info" data-cy="entityDetailsBackButton">
-          <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Zpět</span>
-        </Button>
-        &nbsp;
-        <Button tag={Link} to={`/project/${projectEntity.id}/edit`} replace color="primary">
-          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
-        </Button>
+        {account && account?.login === projectEntity.biography?.user?.login ? (
+          <div>
+            <Button tag={Link} to={`/biography/${projectEntity.biography?.id}`} replace color="info" data-cy="entityDetailsBackButton">
+              <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Zpět</span>
+            </Button>
+            &nbsp;
+            <Button tag={Link} to={`/project/${projectEntity.id}/edit`} replace color="primary">
+              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
+            </Button>
+          </div>
+        ) : (
+          <div>
+            <Button tag={Link} to="/project" replace color="info" data-cy="entityDetailsBackButton">
+              <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Zpět</span>
+            </Button>
+            &nbsp;
+            <Button tag={Link} to={`/project/${projectEntity.id}/edit`} replace color="secondary" disabled={true}>
+              <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Upravit</span>
+            </Button>
+          </div>
+        )}
       </Col>
     </Row>
   );

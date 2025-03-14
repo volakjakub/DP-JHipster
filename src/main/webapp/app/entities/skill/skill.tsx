@@ -94,7 +94,7 @@ export const Skill = () => {
         Dovednosti
         <div className="d-flex justify-content-end">
           <Button className="me-2" color="info" onClick={handleSyncList} disabled={loading}>
-            <FontAwesomeIcon icon="sync" spin={loading} /> Refresh list
+            <FontAwesomeIcon icon="sync" spin={loading} /> Obnovit
           </Button>
         </div>
       </h2>

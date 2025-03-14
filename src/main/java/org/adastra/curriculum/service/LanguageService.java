@@ -5,7 +5,6 @@ import static org.adastra.curriculum.security.SecurityUtils.getCurrentUserLogin;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.adastra.curriculum.domain.Biography;
 import org.adastra.curriculum.domain.Language;
 import org.adastra.curriculum.repository.LanguageRepository;
 import org.adastra.curriculum.service.dto.LanguageDTO;

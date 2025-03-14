@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.adastra.curriculum.domain.Education;
-import org.adastra.curriculum.domain.Language;
 import org.adastra.curriculum.repository.EducationRepository;
 import org.adastra.curriculum.service.dto.EducationDTO;
 import org.adastra.curriculum.service.mapper.EducationMapper;
