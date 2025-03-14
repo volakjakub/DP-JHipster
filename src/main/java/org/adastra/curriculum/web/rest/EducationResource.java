@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.adastra.curriculum.repository.EducationRepository;
+import org.adastra.curriculum.security.AuthoritiesConstants;
 import org.adastra.curriculum.service.EducationService;
 import org.adastra.curriculum.service.dto.EducationDTO;
 import org.adastra.curriculum.web.rest.errors.BadRequestAlertException;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -55,6 +57,7 @@ public class EducationResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<EducationDTO> createEducation(@Valid @RequestBody EducationDTO educationDTO) throws URISyntaxException {
         LOG.debug("REST request to save Education : {}", educationDTO);
         if (educationDTO.getId() != null) {
@@ -77,6 +80,7 @@ public class EducationResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<EducationDTO> updateEducation(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody EducationDTO educationDTO
@@ -111,6 +115,7 @@ public class EducationResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<EducationDTO> partialUpdateEducation(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody EducationDTO educationDTO
@@ -142,6 +147,7 @@ public class EducationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of educations in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<EducationDTO>> getAllEducations(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         LOG.debug("REST request to get a page of Educations");
         Page<EducationDTO> page = educationService.findAll(pageable);
@@ -156,6 +162,7 @@ public class EducationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of educations in body.
      */
     @GetMapping("/biography")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<List<EducationDTO>> getAllEducationsByBiographyId(
         @RequestParam(name = "biographyId", required = true) Long biographyId
     ) {
@@ -171,6 +178,7 @@ public class EducationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the educationDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<EducationDTO> getEducation(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Education : {}", id);
         Optional<EducationDTO> educationDTO = educationService.findOne(id);
@@ -184,6 +192,7 @@ public class EducationResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<Void> deleteEducation(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Education : {}", id);
         educationService.delete(id);

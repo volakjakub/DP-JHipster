@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.adastra.curriculum.repository.SkillRepository;
+import org.adastra.curriculum.security.AuthoritiesConstants;
 import org.adastra.curriculum.service.SkillService;
 import org.adastra.curriculum.service.dto.SkillDTO;
 import org.adastra.curriculum.web.rest.errors.BadRequestAlertException;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -55,6 +57,7 @@ public class SkillResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<SkillDTO> createSkill(@Valid @RequestBody SkillDTO skillDTO) throws URISyntaxException {
         LOG.debug("REST request to save Skill : {}", skillDTO);
         if (skillDTO.getId() != null) {
@@ -77,6 +80,7 @@ public class SkillResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<SkillDTO> updateSkill(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody SkillDTO skillDTO
@@ -111,6 +115,7 @@ public class SkillResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<SkillDTO> partialUpdateSkill(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody SkillDTO skillDTO
@@ -142,6 +147,7 @@ public class SkillResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of skills in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<SkillDTO>> getAllSkills(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         LOG.debug("REST request to get a page of Skills");
         Page<SkillDTO> page = skillService.findAll(pageable);
@@ -156,6 +162,7 @@ public class SkillResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of skills in body.
      */
     @GetMapping("/biography")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<List<SkillDTO>> getAllProjectsByBiographyId(
         @RequestParam(name = "biographyId", required = true) Long biographyId
     ) {
@@ -171,6 +178,7 @@ public class SkillResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the skillDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.ADMIN + "\", \"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<SkillDTO> getSkill(@PathVariable("id") Long id) {
         LOG.debug("REST request to get Skill : {}", id);
         Optional<SkillDTO> skillDTO = skillService.findOne(id);
@@ -184,6 +192,7 @@ public class SkillResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(\"" + AuthoritiesConstants.USER + "\")")
     public ResponseEntity<Void> deleteSkill(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete Skill : {}", id);
         skillService.delete(id);
