@@ -14,7 +14,7 @@ export const Home = () => {
   const account = useAppSelector(state => state.authentication.account);
 
   useEffect(() => {
-    if (account?.login && account?.authorities.includes('ROLE_USER')) {
+    if (account?.login && !account?.authorities.includes('ROLE_ADMIN')) {
       dispatch(getBiographyEntityByUsername(account.login));
     }
   }, []);
