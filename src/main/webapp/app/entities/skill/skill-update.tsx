@@ -106,7 +106,7 @@ export const SkillUpdate = () => {
                 id="skill-expertise"
                 name="expertise"
                 data-cy="expertise"
-                type="text"
+                type="select"
                 validate={{
                   required: { value: true, message: 'Toto pole je povinné.' },
                   validate: v => isNumber(v) || 'Toto pole by mělo obsahovat číslo.',

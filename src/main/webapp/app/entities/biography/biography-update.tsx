@@ -46,7 +46,7 @@ export const BiographyUpdate = () => {
     const entity = {
       ...biographyEntity,
       ...values,
-      user: biographyEntity.user,
+      user: account,
     };
 
     if (isNew) {
@@ -61,7 +61,7 @@ export const BiographyUpdate = () => {
       ? {}
       : {
           ...biographyEntity,
-          user: biographyEntity?.user?.id,
+          user: account,
         };
 
   return (
