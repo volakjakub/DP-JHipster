@@ -73,7 +73,7 @@ public class SkillService {
                 skillDTO.getName(),
                 skillDTO.getBiography().getId()
             );
-            if (skillOptional.isPresent()) {
+            if (skillOptional.isPresent() && !skillOptional.get().getId().equals(skillDTO.getId())) {
                 throw new RuntimeException("Skill already exists!");
             }
 
