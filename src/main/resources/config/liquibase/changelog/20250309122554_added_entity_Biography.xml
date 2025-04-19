@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity Biography.
+    -->
+    <changeSet id="20250309122554-1" author="jhipster">
+        <createTable tableName="biography">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="last_name" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="title" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+            <column name="phone" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="email" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="street" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="city" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="country" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="position" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="employed_from" type="date">
+                <constraints nullable="false" />
+            </column>
+            <column name="image" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="true" unique="true" uniqueConstraintName="ux_biography__user_id" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+    </changeSet>
+
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+
+</databaseChangeLog>

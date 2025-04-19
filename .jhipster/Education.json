@@ -1,0 +1,45 @@
+{
+  "annotations": {
+    "changelogDate": "20250309125311"
+  },
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "school",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "EducationType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "HIGH_SCHOOL,BACHELOR,MASTER,DOCTORATE"
+    },
+    {
+      "fieldName": "start",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "end",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "jpaMetamodelFiltering": false,
+  "name": "Education",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "biography",
+      "otherEntityRelationshipName": "educations",
+      "relationshipName": "biography",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

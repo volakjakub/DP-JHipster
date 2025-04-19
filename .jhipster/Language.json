@@ -1,0 +1,35 @@
+{
+  "annotations": {
+    "changelogDate": "20250309130905"
+  },
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "LanguageName",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "CZECH,SLOVAK,ENGLISH"
+    },
+    {
+      "fieldName": "expertise",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "jpaMetamodelFiltering": false,
+  "name": "Language",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "biography",
+      "otherEntityRelationshipName": "languages",
+      "relationshipName": "biography",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}
